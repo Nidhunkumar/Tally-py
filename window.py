@@ -63,12 +63,16 @@ sbmibtn=Button(screen,text='F1:Help',borderwidth="0",background="#023047",
                                      foreground="white",width=10,font="-family {Segoe UI} -size 12 -weight bold ").place(x=1400,y=10)
 #main-canvas
 global Canvas1
-Canvas1 = tk.Canvas( background="#B0B0B0", relief="ridge")
+Canvas1 = tk.Canvas( background="#3385ff",relief=FLAT,bd=0,highlightthickness=0)
 Canvas1.place(relx=0, rely=0.07, relheight=0.800, relwidth=.850)
-Label5 = Label(Canvas1,text="mov",borderwidth="0", width=5, background="#3385ff",
+Label5 = Label(Canvas1,text="C-Name",borderwidth="0", background="#3385ff",
                                     foreground="#00254a",
                                     font="-family {Segoe UI} -size 10 -weight bold ")
-Label5.place(relx=0, rely=0, relheight=0.03, relwidth=0.999)
+Label5.pack(anchor=CENTER)
+label_1=Label(Canvas1, text="",borderwidth="0", width=20, background="#3385ff",
+                                    foreground="#00254a",   
+                                    font="-family {Segoe UI} -size 10 -weight bold ")
+label_1.pack(anchor=W)
 
 
 #entry_box
@@ -85,8 +89,8 @@ def cavas4():
 
 #center-canvas
 global Canvas2
-Canvas2 = tk.Canvas(Canvas1, background="#ffffff", insertbackground="black", relief="ridge",selectbackground="blue", selectforeground="white")
-Canvas2.place(relx=0.11, rely=0.1, relheight=0.800, relwidth=0.800)
+Canvas2 = tk.Canvas(Canvas1, background="#ffffff", insertbackground="black", relief="flat",selectbackground="blue", selectforeground="white")
+Canvas2.place(x=0,y=20, relheight=1, relwidth=1)
 
 
 #side-canvas
@@ -100,6 +104,46 @@ f3.pack()
 global sgaf1
 sgaf1=Frame(Canvas2,bg="white",relief=RIDGE,bd=1)
 sgaf1.pack(pady=10)
+
+def movement_analysis():
+    global label_1
+    label_1 = Label(Canvas1, text="Gate Way of Tally",borderwidth="0", width=20, background="#3385ff",
+                                    foreground="#00254a",   
+                                    font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+
+    f1.destroy()
+    global f55
+    global f66
+    f55=Frame(Canvas2,bg="white",relief=RAISED,bd=1)
+    f55.pack(pady=15)
+    f66=Frame(Canvas2,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
+    f66.pack()
+
+    f0.destroy()
+    l11=Label(f55,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
+    l11.pack(padx=10,pady=10)
+    
+    options_list=["Period","Stock Category Analysis","Stock Item Analysis"]
+
+
+    cmb=ttk.Combobox(f55 ,values=options_list,font=("times new roman",10,"bold"))
+    cmb.pack(fill=X,pady=10,padx=10)
+
+    itemsforlistbox=['Stock Group Analysis','Stock Category Analysis','Stock Item Analysis','Group Analysis','Exit']
+
+    l5=Label(f66,text="Movement Analysis",font=hfont,bg="blue",fg="black")
+    l5.pack(fill=X)
+
+    global lb
+    lb=Listbox(f66,height=6,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)
+
+   
+    lb.bind('<<ListboxSelect>>',CurSelet)
+    lb.pack(padx=10,pady=10)
+    for items in itemsforlistbox:
+        lb.insert(END,items)
+
 
 # def Stock_group_analysis():
 #         f55.destroy()
@@ -133,16 +177,22 @@ def selected_groups():
         f3.destroy()
         sgaf1.destroy()
         Canvas2.destroy()
+        label_1=Label(Canvas1, text="Stock group analysis",borderwidth="0", width=20, background="#3385ff",
+                                    foreground="#00254a",   
+                                    font="-family {Segoe UI} -size 10 -weight bold ")
+        label_1.place(relx=0, rely=0)
+
+
         global selected_groups_frame
         selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
-        selected_groups_frame.place(x=10,y=35,width=1300,height=650)
+        selected_groups_frame.place(x=0,y=21,width=1308,height=660)
 
         f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
         f11.grid(row=1,column=0,columnspan=3,ipadx=200)
         l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
         l1f1.pack(fill=X)
         f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        f12.place(x=613,y=0,width=682,height=80)
+        f12.place(x=613,y=0,width=692,height=80)
         l1f2=Label(f12,text="PRODUCT NAME",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
         l1f2.place(x=305,y=10,anchor="center")
         l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
@@ -164,7 +214,7 @@ def selected_groups():
 
         tree0.column("#6", anchor=tk.W,width=110)
 
-        tree0.column("#7", anchor=tk.W,width=122)
+        tree0.column("#7", anchor=tk.W,width=132)
 
 
         tree0.place(x=1,y=139)
@@ -173,16 +223,6 @@ def selected_groups():
         tree0.bind("<Double-1>", movement_val)
 
 
-        # f13=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        # f13.place(x=0,y=145,width=607,height=450)
-        # f13bt1=Button(f13,text="PRODUCT-1",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0,command=movement_values)
-        # f13bt1.place(x=0,y=0,anchor="nw")
-        # f13bt2=Button(f13,text="PRODUCT-2",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        # f13bt2.place(x=0,y=30,anchor="nw")
-        # f13bt3=Button(f13,text="PRODUCT-3",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        # f13bt3.place(x=0,y=60,anchor="nw")
-        # f13bt4=Button(f13,text="PRODUCT-4",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        # f13bt4.place(x=0,y=90,anchor="nw")
 
         f14=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
         f14.place(x=614,y=81,width=340,height=58)
@@ -198,7 +238,7 @@ def selected_groups():
 
 
         f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        f15.place(x=955,y=81,width=340,height=58)
+        f15.place(x=955,y=81,width=350,height=58)
         l2f5=Label(f15,text="OUTWARDS",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
         l2f5.place(x=0,y=0,anchor="nw")
         l2f6=Label(f15,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
@@ -208,58 +248,604 @@ def selected_groups():
         l2f8=Label(f15,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
         l2f8.place(x=225,y=30,anchor="nw")
 
-        # f16=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=2)
-        # f16.place(x=610,y=145,width=340,height=450)
-        # l3f6=Label(f16,text="10 Nos",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        # l3f6.place(x=0,y=0,anchor="nw")
-        # l3f7=Label(f16,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        # l3f7.place(x=80,y=0,anchor="nw")
-        # l3f8=Label(f16,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        # l3f8.place(x=180,y=0,anchor="nw")
-        
-
-        # f17=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=2)
-        # f17.place(x=950,y=145,width=340,height=450)
-        # l4f6=Label(f17,text="10 Nos",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        # l4f6.place(x=0,y=0,anchor="nw")
-        # l4f7=Label(f17,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        # l4f7.place(x=80,y=0,anchor="nw")
-        # l4f8=Label(f17,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        # l4f8.place(x=180,y=0,anchor="nw")
 
 
        
         f18=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        f18.place(x=0,y=598,width=607,height=48)
+        f18.place(x=0,y=598,width=607,height=65)
         l5f6=Label(f18,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
         l5f6.place(x=1,y=0,anchor="nw")
 
         f19=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        f19.place(x=610,y=598,width=340,height=48)
+        f19.place(x=610,y=598,width=340,height=65)
         l6f6=Label(f19,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
         l6f6.place(x=0,y=0,anchor="nw")
 
         f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        f20.place(x=950,y=598,width=345,height=48)
+        f20.place(x=950,y=598,width=355,height=65)
         l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
         l7f6.place(x=0,y=0,anchor="nw")
 
+def selected_category():
+    f1.destroy()
+    f3.destroy()
+    sgaf1.destroy()
+    Canvas2.destroy()
+    label_1=Label(Canvas1, text="Stock Category Movement Analysis",borderwidth="0", background="#3385ff",
+                                foreground="#00254a",   
+                                font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+
+
+    global selected_groups_frame
+    selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    selected_groups_frame.place(x=0,y=21,width=1308,height=660)
+
+    f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
+    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
+    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
+    l1f1.pack(fill=X)
+    f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f12.place(x=613,y=0,width=692,height=80)
+    l1f2=Label(f12,text="PRODUCT NAME",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f2.place(x=305,y=10,anchor="center")
+    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f3.place(x=305,y=30,anchor="center")
+    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f4.place(x=305,y=50,anchor="center")
+
+    tree0=ttk.Treeview(selected_groups_frame, column=("c1", "c2","c3","c4","c5","c6","c7"), show='headings',height=22)
+
+    tree0.column("#1", anchor=tk.W,width=610)
+
+    tree0.column("#2", anchor=tk.W,width=110)
+
+    tree0.column("#3",anchor=tk.W,width=110)
+
+    tree0.column("#4", anchor=tk.W,width=120)
+
+    tree0.column("#5", anchor=tk.W,width=110)
+
+    tree0.column("#6", anchor=tk.W,width=110)
+
+    tree0.column("#7", anchor=tk.W,width=132)
+
+
+    tree0.place(x=1,y=139)
+
+    tree0.insert("",'end',values=("C-Name","12 BTL","13","14","15","16","17"))
+    tree0.bind("<Double-1>", movement_val)
+
+
+
+    f14=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f14.place(x=614,y=81,width=340,height=58)
+    l1f5=Label(f14,text="INWARDS",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f5.place(x=0,y=0,anchor="nw")
+    l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=0,y=30,anchor="nw")
+    l1f7=Label(f14,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=110,y=30,anchor="nw")
+    l1f8=Label(f14,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=225,y=30,anchor="nw")
+
+
+
+    f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f15.place(x=955,y=81,width=350,height=58)
+    l2f5=Label(f15,text="OUTWARDS",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l2f5.place(x=0,y=0,anchor="nw")
+    l2f6=Label(f15,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f6.place(x=0,y=30,anchor="nw")
+    l2f7=Label(f15,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f7.place(x=110,y=30,anchor="nw")
+    l2f8=Label(f15,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f8.place(x=225,y=30,anchor="nw")
+
+
+
+
+    f18=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f18.place(x=0,y=598,width=607,height=65)
+    l5f6=Label(f18,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l5f6.place(x=1,y=0,anchor="nw")
+
+    f19=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f19.place(x=610,y=598,width=340,height=65)
+    l6f6=Label(f19,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l6f6.place(x=0,y=0,anchor="nw")
+
+    f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f20.place(x=950,y=598,width=355,height=65)
+    l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l7f6.place(x=0,y=0,anchor="nw")
+
+def selected_item():
+    movement_values()
+
+def Bank_account_group():
+    f1.destroy()
+    f3.destroy()
+    sgaf1.destroy()
+    Canvas2.destroy()
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+    global selected_groups_frame
+    selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    selected_groups_frame.place(x=0,y=21,width=1308,height=660)
+    f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
+    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
+    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
+    l1f1.pack(fill=X)
+    f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f12.place(x=613,y=0,width=692,height=80)
+    l1f2=Label(f12,text="Bank Accounts",font=hfont,bg="white",fg="black",borderwidth=5)
+    l1f2.place(x=305,y=10,anchor="center")
+    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f3.place(x=305,y=30,anchor="center")
+    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f4.place(x=305,y=50,anchor="center")
+    tree0=ttk.Treeview(selected_groups_frame, column=("c1", "c2","c3","c4","c5","c6","c7"), show='headings',height=22)
+    tree0.column("#1", anchor=tk.W,width=610)
+    tree0.column("#2", anchor=tk.W,width=110)
+    tree0.column("#3",anchor=tk.W,width=110)
+    tree0.column("#4", anchor=tk.W,width=120)
+    tree0.column("#5", anchor=tk.W,width=110)
+    tree0.column("#6", anchor=tk.W,width=110)
+    tree0.column("#7", anchor=tk.W,width=132)
+    tree0.place(x=1,y=139)
+    tree0.insert("",'end',values=("C-Name","12 BTL","13","14","15","16","17"))
+    tree0.bind("<Double-1>", movement_val)
+    f14=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f14.place(x=614,y=81,width=340,height=58)
+    l1f5=Label(f14,text="Purchases",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f5.place(x=0,y=0,anchor="nw")
+    l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=0,y=30,anchor="nw")
+    l1f7=Label(f14,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=110,y=30,anchor="nw")
+    l1f8=Label(f14,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=225,y=30,anchor="nw")
+    f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f15.place(x=955,y=81,width=350,height=58)
+    l2f5=Label(f15,text="Sales",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l2f5.place(x=0,y=0,anchor="nw")
+    l2f6=Label(f15,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f6.place(x=0,y=30,anchor="nw")
+    l2f7=Label(f15,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f7.place(x=110,y=30,anchor="nw")
+    l2f8=Label(f15,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f8.place(x=225,y=30,anchor="nw")
+    f18=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f18.place(x=0,y=598,width=607,height=65)
+    l5f6=Label(f18,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l5f6.place(x=1,y=0,anchor="nw")
+    f19=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f19.place(x=610,y=598,width=340,height=65)
+    l6f6=Label(f19,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l6f6.place(x=0,y=0,anchor="nw")
+    f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f20.place(x=950,y=598,width=355,height=65)
+    l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l7f6.place(x=0,y=0,anchor="nw")
+def Bank_OCC_group():
+    f1.destroy()
+    f3.destroy()
+    sgaf1.destroy()
+    Canvas2.destroy()
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+    global selected_groups_frame
+    selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    selected_groups_frame.place(x=0,y=21,width=1308,height=660)
+    f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
+    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
+    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
+    l1f1.pack(fill=X)
+    f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f12.place(x=613,y=0,width=692,height=80)
+    l1f2=Label(f12,text="Bank OCC A/c ",font=hfont,bg="white",fg="black",borderwidth=5)
+    l1f2.place(x=305,y=10,anchor="center")    
+    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f3.place(x=305,y=30,anchor="center")
+    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f4.place(x=305,y=50,anchor="center")
+    tree0=ttk.Treeview(selected_groups_frame, column=("c1", "c2","c3","c4","c5","c6","c7"), show='headings',height=22)
+    tree0.column("#1", anchor=tk.W,width=610)
+    tree0.column("#2", anchor=tk.W,width=110)
+    tree0.column("#3",anchor=tk.W,width=110)
+    tree0.column("#4", anchor=tk.W,width=120)
+    tree0.column("#5", anchor=tk.W,width=110)
+    tree0.column("#6", anchor=tk.W,width=110)
+    tree0.column("#7", anchor=tk.W,width=132)
+    tree0.place(x=1,y=139)
+    tree0.insert("",'end',values=("C-Name","12 BTL","13","14","15","16","17"))
+    tree0.bind("<Double-1>", movement_val)
+    f14=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f14.place(x=614,y=81,width=340,height=58)
+    l1f5=Label(f14,text="Purchases",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f5.place(x=0,y=0,anchor="nw")
+    l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=0,y=30,anchor="nw")
+    l1f7=Label(f14,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=110,y=30,anchor="nw")
+    l1f8=Label(f14,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=225,y=30,anchor="nw")
+    f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f15.place(x=955,y=81,width=350,height=58)
+    l2f5=Label(f15,text="Sales",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l2f5.place(x=0,y=0,anchor="nw")
+    l2f6=Label(f15,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f6.place(x=0,y=30,anchor="nw")
+    l2f7=Label(f15,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f7.place(x=110,y=30,anchor="nw")
+    l2f8=Label(f15,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f8.place(x=225,y=30,anchor="nw")
+    f18=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f18.place(x=0,y=598,width=607,height=65)
+    l5f6=Label(f18,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l5f6.place(x=1,y=0,anchor="nw")
+    f19=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f19.place(x=610,y=598,width=340,height=65)
+    l6f6=Label(f19,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l6f6.place(x=0,y=0,anchor="nw")
+    f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f20.place(x=950,y=598,width=355,height=65)
+    l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l7f6.place(x=0,y=0,anchor="nw")
+
+def Bank_OD_group():
+    f1.destroy()
+    f3.destroy()
+    sgaf1.destroy()
+    Canvas2.destroy()
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+    global selected_groups_frame
+    selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    selected_groups_frame.place(x=0,y=21,width=1308,height=660)
+    f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
+    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
+    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
+    l1f1.pack(fill=X)
+    f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f12.place(x=613,y=0,width=692,height=80)
+    l1f2=Label(f12,text="Bank OD A/c ",font=hfont,bg="white",fg="black",borderwidth=5)
+    l1f2.place(x=305,y=10,anchor="center")    
+    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f3.place(x=305,y=30,anchor="center")
+    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f4.place(x=305,y=50,anchor="center")
+    tree0=ttk.Treeview(selected_groups_frame, column=("c1", "c2","c3","c4","c5","c6","c7"), show='headings',height=22)
+    tree0.column("#1", anchor=tk.W,width=610)
+    tree0.column("#2", anchor=tk.W,width=110)
+    tree0.column("#3",anchor=tk.W,width=110)
+    tree0.column("#4", anchor=tk.W,width=120)
+    tree0.column("#5", anchor=tk.W,width=110)
+    tree0.column("#6", anchor=tk.W,width=110)
+    tree0.column("#7", anchor=tk.W,width=132)
+    tree0.place(x=1,y=139)
+    tree0.insert("",'end',values=("C-Name","12 BTL","13","14","15","16","17"))
+    tree0.bind("<Double-1>", movement_val)
+    f14=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f14.place(x=614,y=81,width=340,height=58)
+    l1f5=Label(f14,text="Purchases",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f5.place(x=0,y=0,anchor="nw")
+    l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=0,y=30,anchor="nw")
+    l1f7=Label(f14,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=110,y=30,anchor="nw")
+    l1f8=Label(f14,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=225,y=30,anchor="nw")
+    f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f15.place(x=955,y=81,width=350,height=58)
+    l2f5=Label(f15,text="Sales",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l2f5.place(x=0,y=0,anchor="nw")
+    l2f6=Label(f15,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f6.place(x=0,y=30,anchor="nw")
+    l2f7=Label(f15,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f7.place(x=110,y=30,anchor="nw")
+    l2f8=Label(f15,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f8.place(x=225,y=30,anchor="nw")
+    f18=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f18.place(x=0,y=598,width=607,height=65)
+    l5f6=Label(f18,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l5f6.place(x=1,y=0,anchor="nw")
+    f19=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f19.place(x=610,y=598,width=340,height=65)
+    l6f6=Label(f19,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l6f6.place(x=0,y=0,anchor="nw")
+    f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f20.place(x=950,y=598,width=355,height=65)
+    l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l7f6.place(x=0,y=0,anchor="nw")
+
+def Branch_Division_group():
+    f1.destroy()
+    f3.destroy()
+    sgaf1.destroy()
+    Canvas2.destroy()
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+    global selected_groups_frame
+    selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    selected_groups_frame.place(x=0,y=21,width=1308,height=660)
+    f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
+    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
+    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
+    l1f1.pack(fill=X)
+    f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f12.place(x=613,y=0,width=692,height=80)
+    l1f2=Label(f12,text="Branch/Devision ",font=hfont,bg="white",fg="black",borderwidth=5)
+    l1f2.place(x=305,y=10,anchor="center")    
+    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f3.place(x=305,y=30,anchor="center")
+    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f4.place(x=305,y=50,anchor="center")
+    tree0=ttk.Treeview(selected_groups_frame, column=("c1", "c2","c3","c4","c5","c6","c7"), show='headings',height=22)
+    tree0.column("#1", anchor=tk.W,width=610)
+    tree0.column("#2", anchor=tk.W,width=110)
+    tree0.column("#3",anchor=tk.W,width=110)
+    tree0.column("#4", anchor=tk.W,width=120)
+    tree0.column("#5", anchor=tk.W,width=110)
+    tree0.column("#6", anchor=tk.W,width=110)
+    tree0.column("#7", anchor=tk.W,width=132)
+    tree0.place(x=1,y=139)
+    tree0.insert("",'end',values=("C-Name","12 BTL","13","14","15","16","17"))
+    tree0.bind("<Double-1>", movement_val)
+    f14=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f14.place(x=614,y=81,width=340,height=58)
+    l1f5=Label(f14,text="Purchases",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f5.place(x=0,y=0,anchor="nw")
+    l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=0,y=30,anchor="nw")
+    l1f7=Label(f14,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=110,y=30,anchor="nw")
+    l1f8=Label(f14,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=225,y=30,anchor="nw")
+    f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f15.place(x=955,y=81,width=350,height=58)
+    l2f5=Label(f15,text="Sales",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l2f5.place(x=0,y=0,anchor="nw")
+    l2f6=Label(f15,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f6.place(x=0,y=30,anchor="nw")
+    l2f7=Label(f15,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f7.place(x=110,y=30,anchor="nw")
+    l2f8=Label(f15,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f8.place(x=225,y=30,anchor="nw")
+    f18=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f18.place(x=0,y=598,width=607,height=65)
+    l5f6=Label(f18,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l5f6.place(x=1,y=0,anchor="nw")
+    f19=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f19.place(x=610,y=598,width=340,height=65)
+    l6f6=Label(f19,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l6f6.place(x=0,y=0,anchor="nw")
+    f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f20.place(x=950,y=598,width=355,height=65)
+    l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l7f6.place(x=0,y=0,anchor="nw")
+
+def Cash_in_Hand_group():
+    f1.destroy()
+    f3.destroy()
+    sgaf1.destroy()
+    Canvas2.destroy()
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+    global selected_groups_frame
+    selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    selected_groups_frame.place(x=0,y=21,width=1308,height=660)
+    f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
+    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
+    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
+    l1f1.pack(fill=X)
+    f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f12.place(x=613,y=0,width=692,height=80)
+    l1f2=Label(f12,text="Cash-in-Hand ",font=hfont,bg="white",fg="black",borderwidth=5)
+    l1f2.place(x=305,y=10,anchor="center")    
+    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f3.place(x=305,y=30,anchor="center")
+    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f4.place(x=305,y=50,anchor="center")
+    tree0=ttk.Treeview(selected_groups_frame, column=("c1", "c2","c3","c4","c5","c6","c7"), show='headings',height=22)
+    tree0.column("#1", anchor=tk.W,width=610)
+    tree0.column("#2", anchor=tk.W,width=110)
+    tree0.column("#3",anchor=tk.W,width=110)
+    tree0.column("#4", anchor=tk.W,width=120)
+    tree0.column("#5", anchor=tk.W,width=110)
+    tree0.column("#6", anchor=tk.W,width=110)
+    tree0.column("#7", anchor=tk.W,width=132)
+    tree0.place(x=1,y=139)
+    tree0.insert("",'end',values=("C-Name","12 BTL","13","14","15","16","17"))
+    tree0.bind("<Double-1>", movement_val)
+    f14=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f14.place(x=614,y=81,width=340,height=58)
+    l1f5=Label(f14,text="Purchases",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f5.place(x=0,y=0,anchor="nw")
+    l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=0,y=30,anchor="nw")
+    l1f7=Label(f14,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=110,y=30,anchor="nw")
+    l1f8=Label(f14,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=225,y=30,anchor="nw")
+    f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f15.place(x=955,y=81,width=350,height=58)
+    l2f5=Label(f15,text="Sales",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l2f5.place(x=0,y=0,anchor="nw")
+    l2f6=Label(f15,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f6.place(x=0,y=30,anchor="nw")
+    l2f7=Label(f15,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f7.place(x=110,y=30,anchor="nw")
+    l2f8=Label(f15,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f8.place(x=225,y=30,anchor="nw")
+    f18=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f18.place(x=0,y=598,width=607,height=65)
+    l5f6=Label(f18,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l5f6.place(x=1,y=0,anchor="nw")
+    f19=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f19.place(x=610,y=598,width=340,height=65)
+    l6f6=Label(f19,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l6f6.place(x=0,y=0,anchor="nw")
+    f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f20.place(x=950,y=598,width=355,height=65)
+    l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l7f6.place(x=0,y=0,anchor="nw")
+
+def Sundry_Creditors_group():
+    f1.destroy()
+    f3.destroy()
+    sgaf1.destroy()
+    Canvas2.destroy()
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+    global selected_groups_frame
+    selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    selected_groups_frame.place(x=0,y=21,width=1308,height=660)
+    f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
+    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
+    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
+    l1f1.pack(fill=X)
+    f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f12.place(x=613,y=0,width=692,height=80)
+    l1f2=Label(f12,text="Sundry Creditors ",font=hfont,bg="white",fg="black",borderwidth=5)
+    l1f2.place(x=305,y=10,anchor="center")    
+    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f3.place(x=305,y=30,anchor="center")
+    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f4.place(x=305,y=50,anchor="center")
+    tree0=ttk.Treeview(selected_groups_frame, column=("c1", "c2","c3","c4","c5","c6","c7"), show='headings',height=22)
+    tree0.column("#1", anchor=tk.W,width=610)
+    tree0.column("#2", anchor=tk.W,width=110)
+    tree0.column("#3",anchor=tk.W,width=110)
+    tree0.column("#4", anchor=tk.W,width=120)
+    tree0.column("#5", anchor=tk.W,width=110)
+    tree0.column("#6", anchor=tk.W,width=110)
+    tree0.column("#7", anchor=tk.W,width=132)
+    tree0.place(x=1,y=139)
+    tree0.insert("",'end',values=("C-Name","12 BTL","13","14","15","16","17"))
+    tree0.bind("<Double-1>", movement_val)
+    f14=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f14.place(x=614,y=81,width=340,height=58)
+    l1f5=Label(f14,text="Purchases",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f5.place(x=0,y=0,anchor="nw")
+    l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=0,y=30,anchor="nw")
+    l1f7=Label(f14,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=110,y=30,anchor="nw")
+    l1f8=Label(f14,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=225,y=30,anchor="nw")
+    f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f15.place(x=955,y=81,width=350,height=58)
+    l2f5=Label(f15,text="Sales",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l2f5.place(x=0,y=0,anchor="nw")
+    l2f6=Label(f15,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f6.place(x=0,y=30,anchor="nw")
+    l2f7=Label(f15,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f7.place(x=110,y=30,anchor="nw")
+    l2f8=Label(f15,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f8.place(x=225,y=30,anchor="nw")
+    f18=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f18.place(x=0,y=598,width=607,height=65)
+    l5f6=Label(f18,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l5f6.place(x=1,y=0,anchor="nw")
+    f19=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f19.place(x=610,y=598,width=340,height=65)
+    l6f6=Label(f19,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l6f6.place(x=0,y=0,anchor="nw")
+    f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f20.place(x=950,y=598,width=355,height=65)
+    l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l7f6.place(x=0,y=0,anchor="nw")
+
+def Sundry_Debtors_group():
+    bt1=Button(Canvas3,text="Sundry Debtors",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis)
+    bt1.pack(fill=X)
+    f55.destroy()
+    f66.destroy()
+    f1.destroy()
+    f3.destroy()
+    sgaf1.destroy()
+    Canvas2.destroy()
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+    global selected_groups_frame
+    selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    selected_groups_frame.place(x=0,y=21,width=1308,height=660)
+    f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
+    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
+    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
+    l1f1.pack(fill=X)
+    f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f12.place(x=613,y=0,width=692,height=80)
+    l1f2=Label(f12,text="Sundry Debtors",font=hfont,bg="white",fg="black",borderwidth=5)
+    l1f2.place(x=305,y=10,anchor="center")    
+    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f3.place(x=305,y=30,anchor="center")
+    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f4.place(x=305,y=50,anchor="center")
+    tree0=ttk.Treeview(selected_groups_frame, column=("c1", "c2","c3","c4","c5","c6","c7"), show='headings',height=22)
+    tree0.column("#1", anchor=tk.W,width=610)
+    tree0.column("#2", anchor=tk.W,width=110)
+    tree0.column("#3",anchor=tk.W,width=110)
+    tree0.column("#4", anchor=tk.W,width=120)
+    tree0.column("#5", anchor=tk.W,width=110)
+    tree0.column("#6", anchor=tk.W,width=110)
+    tree0.column("#7", anchor=tk.W,width=132)
+    tree0.place(x=1,y=139)
+    tree0.insert("",'end',values=("C-Name","12 BTL","13","14","15","16","17"))
+    tree0.bind("<Double-1>", movement_val)
+    f14=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f14.place(x=614,y=81,width=340,height=58)
+    l1f5=Label(f14,text="Purchases",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f5.place(x=0,y=0,anchor="nw")
+    l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=0,y=30,anchor="nw")
+    l1f7=Label(f14,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=110,y=30,anchor="nw")
+    l1f8=Label(f14,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=225,y=30,anchor="nw")
+    f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f15.place(x=955,y=81,width=350,height=58)
+    l2f5=Label(f15,text="Sales",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l2f5.place(x=0,y=0,anchor="nw")
+    l2f6=Label(f15,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f6.place(x=0,y=30,anchor="nw")
+    l2f7=Label(f15,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f7.place(x=110,y=30,anchor="nw")
+    l2f8=Label(f15,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f8.place(x=225,y=30,anchor="nw")
+    f18=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f18.place(x=0,y=598,width=607,height=65)
+    l5f6=Label(f18,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l5f6.place(x=1,y=0,anchor="nw")
+    f19=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f19.place(x=610,y=598,width=340,height=65)
+    l6f6=Label(f19,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l6f6.place(x=0,y=0,anchor="nw")
+    f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f20.place(x=950,y=598,width=355,height=65)
+    l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l7f6.place(x=0,y=0,anchor="nw")
 def movement_val(e):
     movement_values()
 
 def movement_values():
     
-
+    label_1=Label(Canvas1, text="Item movement analysis",borderwidth="0", background="#3385ff",
+                                    foreground="#00254a",   
+                                    font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
     global movement_frame
     movement_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=1)
-    movement_frame.place(x=10,y=35,width=1300,height=650)
+    movement_frame.place(x=0,y=21,width=1308,height=680)
 
     f11=Frame(movement_frame,bg="white",relief=RAISED,bd=1)
     f11.grid(row=1,column=0,columnspan=3,ipadx=200)
     l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",width=33,height=7)
     l1f1.pack(fill=X)
     f12=Frame(movement_frame,bg="white",relief=RAISED,bd=1)
-    f12.place(x=705,y=0,width=590,height=83)
+    f12.place(x=705,y=0,width=600,height=83)
     l1f2=Label(f12,text="PRODUCT NAME",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
     l1f2.place(x=305,y=10,anchor="center")
     l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
@@ -268,14 +854,14 @@ def movement_values():
     l1f4.place(x=305,y=50,anchor="center")
 
     f13=Frame(movement_frame,bg="white",relief=RAISED,bd=2)
-    f13.place(x=0,y=142,width=1295,height=505)
+    f13.place(x=0,y=142,width=1305,height=515)
     f13bt1=Label(f13,text="Movement inward",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     f13bt1.place(x=0,y=0,anchor="nw")
     f13bt2=Label(f13,text="Suppliers",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     f13bt2.place(x=10,y=30,anchor="nw")
 
     f14=Frame(movement_frame,bg="white",relief=RAISED,bd=1)
-    f14.place(x=705,y=83,width=590,height=58)
+    f14.place(x=705,y=83,width=600,height=58)
     l1f5=Label(f14,text="Movement values",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
     l1f5.place(x=0,y=0,anchor="nw")
     l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
@@ -297,7 +883,7 @@ def movement_values():
 
     tree0.column("#4", anchor=tk.CENTER,width=140)
 
-    tree0.column("#5", anchor=tk.CENTER,width=202)
+    tree0.column("#5", anchor=tk.CENTER,width=212)
 
     tree0.place(x=0,y=60)
     tree0.insert("",'end',values=("C-Name","12 BTL","13","14","15"))
@@ -333,7 +919,7 @@ def movement_values():
 
     tree1.column("#4", anchor=tk.CENTER,width=140)
 
-    tree1.column("#5", anchor=tk.CENTER,width=202)
+    tree1.column("#5", anchor=tk.CENTER,width=212)
 
     tree1.place(x=0,y=230)
     tree1.insert("",'end',values=("C-Name","12 BTL","13","14","15"))
@@ -380,12 +966,116 @@ def supplier(e):
    item_values()
 
 def buyer(e):
-    item_values()
+   buyer_dtls()
     
 
+def buyer_dtls():
+    label_1=Label(Canvas1, text="Accounting voucher alteration secondry",borderwidth="0", background="#3385ff",
+                                    foreground="#00254a",   
+                                    font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+    global buyer_dtls_frame
+    buyer_dtls_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=2)
+    buyer_dtls_frame.place(x=0,y=20,width=1308,height=200)
+    l1f1=Label(buyer_dtls_frame,text="Sales No:",font=("times new roman",11,"bold"),bg="#00254a",fg="white",borderwidth=0)
+    l1f1.place(x=0,y=0)
+    l1f2=Label(buyer_dtls_frame,text="1",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f2.place(x=125,y=0)
+   
+    l1f5=Label(buyer_dtls_frame,text="Party A/c name:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f5.place(x=0,y=30)
+    l1f6=Label(buyer_dtls_frame,text="abc",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=125,y=30)
+    l1f7=Label(buyer_dtls_frame,text="Current balance:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=0,y=60)
+    l1f8=Label(buyer_dtls_frame,text="10000cr",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=125,y=60)
+    l1f9=Label(buyer_dtls_frame,text="Sales ledger:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f9.place(x=0,y=90)
+    l1f10=Label(buyer_dtls_frame,text="sale",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f10.place(x=125,y=90)
+    l1f11=Label(buyer_dtls_frame,text="Current balance:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f11.place(x=0,y=120)
+    l1f12=Label(buyer_dtls_frame,text="10000cr",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f12.place(x=125,y=120)
+    
+    E1f15=Entry(buyer_dtls_frame,width=20,font=("times new roman",11,"bold"),bg="yellow",fg="black",borderwidth=0)
+    E1f15.place(x=1138,y=10)
+    E1f15.insert(0,"01-10-21")
+    l1f16=Label(buyer_dtls_frame,text="Friday",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f16.place(x=1150,y=30)
+    horizontal1 =Frame(buyer_dtls_frame, bg='black', height=1,width=1308)
+    horizontal1.place(x=0, y=175)
+
+    bill_tbl=Frame(Canvas1,bg="white",relief=RAISED,bd=1)
+    bill_tbl.place(x=0,y=178,width=1308,height=400)
 
 
+    global tree
+    tree = ttk.Treeview(bill_tbl, column=("c1", "c2", "c3","c4"), show='headings',height=350)
+
+    tree.column("#1", anchor=tk.W,width=830)
+
+    tree.heading("#1", text="Item Name",anchor=tk.W)
+
+    tree.column("#2", anchor=tk.CENTER,width=70)
+
+    tree.heading("#2", text="Quantity")
+
+    tree.column("#3", anchor=tk.CENTER,width=70)
+
+    tree.heading("#3", text="Rate")
+
+    tree.column("#4", anchor=tk.CENTER,width=70)
+
+    tree.heading("#4", text="Amount")
+
+    tree.pack(fill=tk.BOTH)
+
+    conn = mysql.connector.connect(host ="localhost",
+                                     user = "root",
+                                     password ="",
+                                     db ="tally")
+    c= conn.cursor()
+
+    
+   
+
+    
+    # c.execute("""CREATE TABLE if not exists stock (
+    #     first_name text,
+    #     last_name text,
+    #     id integer,
+    #     address text,
+    #     city text,
+    #     state text,
+    #     zipcode text)
+    #     """)
+   
+    
+    # for record in data:
+    #     c.execute("INSERT INTO stock VALUES (%s, %s, %s, %s, %s, %s, %s)", record)
+    # conn.commit()
+    c.execute("SELECT * FROM stock")
+    records = c.fetchall()
+
+    for record in records:
+        tree.insert("", "end", values=record)
+    f11=Frame(Canvas1,bg="white",relief=RAISED,bd=1)
+    f11.place(x=0,y=578,width=1308,height=110)
+    l11=Label(f11,text="Narration",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l11.place(x=0,y=0)
+    E11=Entry(f11,width=50,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=1)
+    E11.place(x=0,y=20,height=50)
+    
+    l12=Label(f11,text="333322",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l12.place(x=1200,y=0)
+   
 def item_values():
+    label_1=Label(Canvas1, text="Item voucher analysis",borderwidth="0", width=20, background="#3385ff",
+                                    foreground="#00254a",   
+                                    font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
     
     global item_nm
     item_nm=Frame(Canvas1,height=200,width=1308,bg="white",relief=RAISED,bd=2)
@@ -520,6 +1210,10 @@ def item_values():
     # l3f8.place(x=180,y=0,anchor="nw")
     
 def OnDoubleClick(e):
+    label_1=Label(Canvas1, text="Accounting voucher alteration secondry",borderwidth="0", background="#3385ff",
+                                    foreground="#00254a",   
+                                    font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
     f1.destroy()
     f3.destroy()
     sgaf1.destroy()
@@ -528,40 +1222,51 @@ def OnDoubleClick(e):
     item_val.destroy()
     global bill_frame
     bill_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=2)
-    bill_frame.place(x=0,y=0,width=1308,height=200)
+    bill_frame.place(x=0,y=20,width=1308,height=200)
     l1f1=Label(bill_frame,text="Purchase No:",font=("times new roman",11,"bold"),bg="#00254a",fg="white",borderwidth=0)
     l1f1.place(x=0,y=0)
     l1f2=Label(bill_frame,text="1",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l1f2.place(x=125,y=0)
     l1f3=Label(bill_frame,text="Supplier invoice no:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f3.place(x=0,y=30)
+    l1f3.place(x=0,y=20)
+
     l1f4=Label(bill_frame,text="1",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f4.place(x=135,y=30)
+    l1f4.place(x=135,y=20)
+    
     l1f5=Label(bill_frame,text="Party A/c name:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f5.place(x=0,y=60)
+    l1f5.place(x=0,y=40)
     l1f6=Label(bill_frame,text="abc",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f6.place(x=125,y=60)
+    l1f6.place(x=125,y=40)
     l1f7=Label(bill_frame,text="Current balance:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f7.place(x=0,y=90)
+    l1f7.place(x=0,y=60)
     l1f8=Label(bill_frame,text="10000cr",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f8.place(x=125,y=90)
+    l1f8.place(x=125,y=60)
     l1f9=Label(bill_frame,text="Purchase ledger:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f9.place(x=0,y=120)
+    l1f9.place(x=0,y=80)
     l1f10=Label(bill_frame,text="Purchase acc",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f10.place(x=125,y=120)
+    l1f10.place(x=125,y=80)
     l1f11=Label(bill_frame,text="Current balance:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f11.place(x=0,y=150)
+    l1f11.place(x=0,y=100)
     l1f12=Label(bill_frame,text="10000cr",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f12.place(x=125,y=150)
+    l1f12.place(x=125,y=100)
+    l1f13=Label(bill_frame,text="Date:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f13.place(x=300,y=20)
+    l1f14=Label(bill_frame,text="01/01/2020",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f14.place(x=350,y=20)
+    E1f15=Entry(bill_frame,width=20,font=("times new roman",11,"bold"),bg="yellow",fg="black",borderwidth=0)
+    E1f15.place(x=1138,y=10)
+    E1f15.insert(0,"01-10-21")
+    l1f16=Label(bill_frame,text="Friday",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f16.place(x=1150,y=30)
     horizontal1 =Frame(bill_frame, bg='black', height=1,width=1308)
     horizontal1.place(x=0, y=175)
 
-    bill_tbl=Frame(Canvas1,bg="white",relief=RAISED,bd=2)
-    bill_tbl.place(x=0,y=180,width=1308,height=650)
+    bill_tbl=Frame(Canvas1,bg="white",relief=RAISED,bd=1)
+    bill_tbl.place(x=0,y=178,width=1308,height=400)
 
 
     global tree
-    tree = ttk.Treeview(bill_tbl, column=("c1", "c2", "c3","c4"), show='headings',height=650)
+    tree = ttk.Treeview(bill_tbl, column=("c1", "c2", "c3","c4"), show='headings',height=350)
 
     tree.column("#1", anchor=tk.W,width=830)
 
@@ -610,6 +1315,16 @@ def OnDoubleClick(e):
 
     for record in records:
         tree.insert("", "end", values=record)
+    f11=Frame(Canvas1,bg="white",relief=RAISED,bd=1)
+    f11.place(x=0,y=578,width=1308,height=110)
+    l11=Label(f11,text="Narration",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l11.place(x=0,y=0)
+    E11=Entry(f11,width=50,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=1)
+    E11.place(x=0,y=20,height=50)
+    
+    l12=Label(f11,text="333322",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l12.place(x=1200,y=0)
+    
     
         
 
@@ -630,71 +1345,191 @@ def OnDoubleClick(e):
 global f1
 f1=Frame(Canvas2,bg="white",relief=FLAT,bd=0)
 f1.pack()
-def movement_analysis():
+   
+def CurSelet(evt):
+    value=lb.get(lb.curselection())
+    print (value)   
+    if value=="Stock Group Analysis":
+        select_stl()
+
+    elif value=="Stock Category Analysis":
+        Stock_Cate_Analy()
+    
+    elif value=="Stock Item Analysis":
+
+        stock_item_analy()
+
+    elif value=="Group Analysis":
+
+        group_analysis()
+        
+
+def stock_group_select(ent):
+    value=lb.get(lb.curselection())
+    if value=="Abc-ltd":
+        selected_groups()
+
+def stock_category_select(ent):
+    value=lb.get(lb.curselection())
+    if value=="primary":
+        selected_category()
+def stock_item_select(ent):
+    value=lb.get(lb.curselection())
+    if value=="soap":
+        selected_item()
+def group_item_select(ent):
+    global grp_sel
+    grp_sel=lb.get(lb.curselection())
+    if grp_sel=="Bank account":
+        Bank_account_group()
+    elif grp_sel=="Bank OCC A/c":
+        Bank_OCC_group()
+    elif grp_sel=="Bank OD A/c":
+        Bank_OD_group()
+    elif grp_sel=="Branch/Division":
+        Branch_Division_group()
+    elif grp_sel=="Cash-in-Hand":
+        Cash_in_Hand_group()
+    elif grp_sel=="Sundry Creditors":
+        Sundry_Creditors_group()
+    elif grp_sel=="Sundry Debtors":
+        Sundry_Debtors_group()
+
+def select_stl():
+    global label_1
+    label_1 = Label(Canvas1, text="Select stock group",borderwidth="0", width=20, background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
     f1.destroy()
-    global f55
-    global f66
-    f55=Frame(Canvas2,bg="white",relief=RAISED,bd=1)
-    f55.pack(pady=15)
-    f66=Frame(Canvas2,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
-    f66.pack()
-
+    f55.destroy()
+    f66.destroy()
+    f5=Frame(Canvas2,bg="white",relief=RAISED,bd=1)
+    f5.pack(pady=15)
+    f6=Frame(Canvas2,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
+    f6.pack()
     f0.destroy()
-    l11=Label(f55,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
+    l11=Label(f5,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
     l11.pack(padx=10,pady=10)
-    
     options_list=["Period","Stock Category Analysis","Stock Item Analysis"]
-
-
-    cmb=ttk.Combobox(f55 ,values=options_list,font=("times new roman",10,"bold"))
+    cmb=ttk.Combobox(f5 ,values=options_list,font=("times new roman",10,"bold"))
     cmb.pack(fill=X,pady=10,padx=10)
-    
-
-   
-
-
-
-
-
-
-    itemsforlistbox=['Stock Group Analysis','Stock Category Analysis','Stock Item Analysis','Group Analysis','Exit']
-
-    l5=Label(f66,text="Movement Analysis",font=hfont,bg="blue",fg="black")
+    itemsforlistbox=['Abc-ltd','csd-ltd','vdf-ltd','daf-ltd']
+    l5=Label(f6,text="List of stock group",font=hfont,bg="blue",fg="black")
     l5.pack(fill=X)
-
     global lb
-
-
-    lb=Listbox(f66,height=6,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)
-
+    lb=Listbox(f6,height=6,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)  
+    lb.bind('<<ListboxSelect>>',stock_group_select)
+    lb.pack(padx=10,pady=10)
+    for items in itemsforlistbox:
+        lb.insert(END,items)
    
-
-   
-    lb.bind('<<ListboxSelect>>',CurSelet)
+def  Stock_Cate_Analy():
+    global label_1
+    label_1 = Label(Canvas1, text="Select stock category",borderwidth="0", background="#3385ff", foreground="#00254a",  font="-family {Segoe UI} -size 10 -weight bold ")                                                   
+    label_1.place(relx=0, rely=0)
+    f0.destroy()
+    f1.destroy()
+    f55.destroy()
+    f66.destroy()
+    f5=Frame(Canvas2,bg="white",relief=RAISED,bd=1)
+    f5.pack(pady=15)
+    f6=Frame(Canvas2,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
+    f6.pack()
+    l11=Label(f5,text="Name of Category",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
+    l11.pack(padx=10,pady=10)
+    options_list=["Period","Stock Category Analysis","Stock Item Analysis"]
+    cmb=ttk.Combobox(f5 ,values=options_list,font=("times new roman",10,"bold"))
+    cmb.pack(fill=X,pady=10,padx=10)
+    itemsforlistbox=['primary','secondary']
+    l5=Label(f6,text="List of stock Category",font=hfont,bg="blue",fg="black")
+    l5.pack(fill=X)
+    global lb
+    lb=Listbox(f6,height=6,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)
+    lb.bind('<<ListboxSelect>>',stock_category_select)
     lb.pack(padx=10,pady=10)
     for items in itemsforlistbox:
         lb.insert(END,items)
 
 
+def stock_item_analy():
+    global label_1
+    label_1 = Label(Canvas1, text="Select stock item",borderwidth="0", width=20, background="#3385ff",
+                                    foreground="#00254a",   
+                                    font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+
+    f1.destroy()
+    f55.destroy()
+    f66.destroy()
+
+    f5=Frame(Canvas2,bg="white",relief=RAISED,bd=1)
+    f5.pack(pady=15)
+    f6=Frame(Canvas2,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
+    f6.pack()
+
+    f0.destroy()
+    l11=Label(f5,text="Name of Item",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
+    l11.pack(padx=10,pady=10)
+    
+    options_list=["Period","Stock Category Analysis","Stock Item Analysis"]
 
 
-    # Lb1.pack()
-    # bt1=Button(f1,text="Stock Group Analysis",font=hfont,bg="white",fg="black",command=Stock_group_analysis)
-    # bt1.pack(fill="x",padx=10,pady=10)
-    # bt2=Button(f1,text="Stock Category Analysis",font=hfont,bg="white",fg="black",command=screen.destroy)
-    # bt2.pack(fill="x",padx=10,pady=10)
-    # bt3=Button(f1,text="Stock Item Analysis",font=hfont,bg="white",fg="black",command=screen.destroy)
-    # bt3.pack(fill="x",padx=10,pady=10)
-    # bt4=Button(f1,text="Group Analysis",font=hfont,bg="white",fg="black",command=screen.destroy)
-    # bt4.pack(fill="x",padx=10,pady=10)
-    # bt5=Button(f1,text="Exit",font=hfont,bg="white",fg="black",command=screen.destroy)
-    # bt5.pack(fill="x",padx=10,pady=10)
-def CurSelet(evt):
-    value=lb.get(lb.curselection())
-    print (value)   
-    if value=="Stock Group Analysis":
-        selected_groups()
+    cmb=ttk.Combobox(f5 ,values=options_list,font=("times new roman",10,"bold"))
+    cmb.pack(fill=X,pady=10,padx=10)
 
+    itemsforlistbox=['soap','pen','book']
+
+    l5=Label(f6,text="List of stock Item",font=hfont,bg="blue",fg="black")
+    l5.pack(fill=X)
+
+    global lb
+    lb=Listbox(f6,height=6,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)
+
+   
+    lb.bind('<<ListboxSelect>>',stock_item_select)
+    lb.pack(padx=10,pady=10)
+    for items in itemsforlistbox:
+        lb.insert(END,items)
+
+
+def group_analysis():
+    global label_1
+    label_1 = Label(Canvas1, text="Select Group",borderwidth="0", width=20, background="#3385ff",
+                                    foreground="#00254a",   
+                                    font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+
+    f1.destroy()
+    f55.destroy()
+    f66.destroy()
+
+    f5=Frame(Canvas2,bg="white",relief=RAISED,bd=1)
+    f5.pack(pady=15)
+    f6=Frame(Canvas2,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
+    f6.pack()
+
+    f0.destroy()
+    l11=Label(f5,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
+    l11.pack(padx=10,pady=10)
+    
+    options_list=["Period","Stock Category Analysis","Stock Item Analysis"]
+
+
+    cmb=ttk.Combobox(f5 ,values=options_list,font=("times new roman",10,"bold"))
+    cmb.pack(fill=X,pady=10,padx=10)
+
+    itemsforlistbox=['Bank account','Bank OCC A/c','Bank OD A/c','Branch/Division','Cash-in-hand','Sundry Creditors','Sundry Debtors']
+
+    l5=Label(f6,text="List of Group",font=hfont,bg="blue",fg="black")
+    l5.pack(fill=X)
+
+    global lb
+    lb=Listbox(f6,height=10,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)
+
+   
+    lb.bind('<<ListboxSelect>>',group_item_select)
+    lb.pack(padx=10,pady=10)
+    for items in itemsforlistbox:
+        lb.insert(END,items)
 
 
 global f0
