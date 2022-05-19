@@ -106,13 +106,15 @@ sgaf1=Frame(Canvas2,bg="white",relief=RIDGE,bd=1)
 sgaf1.pack(pady=10)
 
 def movement_analysis():
-    global label_1
-    label_1 = Label(Canvas1, text="Gate Way of Tally",borderwidth="0", background="#3385ff",
+    
+    label_1.destroy()
+    label_0 = Label(Canvas1, text="Gate Way of Tally",borderwidth="0",width="40", background="#3385ff",
                                     foreground="#00254a",   
                                     font="-family {Segoe UI} -size 10 -weight bold ")
-    label_1.place(relx=0, rely=0)
+    label_0.place(relx=0, rely=0)
     
     f1.destroy()
+    
     global movement_analysis_frame
     movement_analysis_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
     movement_analysis_frame.place(x=0,y=21,width=1308,height=660)
@@ -157,7 +159,7 @@ def selected_groups():
         global sdbtn
         sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
         sdbtn.pack(fill=X,pady=10,padx=10)
-        label_1=Label(Canvas1, text="Stock group analysis",borderwidth="0", width=20, background="#3385ff",
+        label_1=Label(Canvas1, text="Stock group analysis",  borderwidth="0", width=40, background="#3385ff",
                                     foreground="#00254a",   
                                     font="-family {Segoe UI} -size 10 -weight bold ")
         label_1.place(relx=0, rely=0)
@@ -251,13 +253,16 @@ def selected_category():
     f3.destroy()
     sgaf1.destroy()
     Canvas2.destroy()
+    
     global sdbtn
     sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
     sdbtn.pack(fill=X,pady=10,padx=10)
-    label_1=Label(Canvas1, text="Stock Category Movement Analysis",borderwidth="0", background="#3385ff",
+    label_1.destroy()
+    global label_2
+    label_2=Label(Canvas1, text="Stock Category Movement Analysis",borderwidth="0",width="40", background="#3385ff",
                                 foreground="#00254a",   
                                 font="-family {Segoe UI} -size 10 -weight bold ")
-    label_1.place(relx=0, rely=0)
+    label_2.place(relx=0, rely=0)
 
 
     global selected_groups_frame
@@ -354,7 +359,7 @@ def Bank_account_group():
     global sdbtn
     sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
     sdbtn.pack(fill=X,pady=10,padx=10)
-    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0",width="40", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
     global selected_groups_frame
     selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
@@ -422,7 +427,7 @@ def Bank_OCC_group():
     global sdbtn
     sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
     sdbtn.pack(fill=X,pady=10,padx=10)
-    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0",width="40", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
     global selected_groups_frame
     selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
@@ -491,7 +496,7 @@ def Bank_OD_group():
     global sdbtn
     sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
     sdbtn.pack(fill=X,pady=10,padx=10)
-    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0",width="40", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
     global selected_groups_frame
     selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
@@ -560,7 +565,7 @@ def Branch_Division_group():
     global sdbtn
     sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
     sdbtn.pack(fill=X,pady=10,padx=10)
-    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0",width="40", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
     global selected_groups_frame
     selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
@@ -629,7 +634,7 @@ def Cash_in_Hand_group():
     global sdbtn
     sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
     sdbtn.pack(fill=X,pady=10,padx=10)
-    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0",width="40", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
     global selected_groups_frame
     selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
@@ -698,7 +703,7 @@ def Sundry_Creditors_group():
     f3.destroy()
     sgaf1.destroy()
     Canvas2.destroy()
-    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0",width="40", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
     global selected_groups_frame
     selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
@@ -760,8 +765,9 @@ def Sundry_Creditors_group():
     l7f6.place(x=0,y=0,anchor="nw")
 
 def movement_analysis_back():
-    global selected_groups_frame
+    
     sdbtn.destroy()
+    label_1.destroy()
     movement_analysis()
 
 def Sundry_Debtors_group():
@@ -774,7 +780,7 @@ def Sundry_Debtors_group():
     f3.destroy()
     sgaf1.destroy()
     Canvas2.destroy()
-    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1=Label(Canvas1, text="Group Analysis",borderwidth="0",width="40", background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
     global selected_groups_frame
     selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
@@ -835,6 +841,7 @@ def Sundry_Debtors_group():
     l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     l7f6.place(x=0,y=0,anchor="nw")
 def movement_val(e):
+    sdbtn.destroy()
     movement_values()
 
 def movement_values():
@@ -842,7 +849,7 @@ def movement_values():
     sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
     sdbtn.pack(fill=X,pady=10,padx=10)
     
-    label_1=Label(Canvas1, text="Item movement analysis",borderwidth="0", background="#3385ff",
+    label_1=Label(Canvas1, text="Item movement analysis",borderwidth="0",width="40", background="#3385ff",
                                     foreground="#00254a",   
                                     font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
@@ -980,7 +987,7 @@ def buyer(e):
     
 
 def buyer_dtls():
-    label_1=Label(Canvas1, text="Accounting voucher alteration secondry",borderwidth="0", background="#3385ff",
+    label_1=Label(Canvas1, text="Accounting voucher alteration secondry",width="40",borderwidth="0", background="#3385ff",
                                     foreground="#00254a",   
                                     font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
@@ -1082,8 +1089,7 @@ def buyer_dtls():
     l12.place(x=1200,y=0)
    
 def item_values():
-    group_analysis_frame.destroy()
-    label_1=Label(Canvas1, text="Item voucher analysis",borderwidth="0", width=20, background="#3385ff",
+    label_1=Label(Canvas1, text="Item voucher analysis",borderwidth="0", width=40, background="#3385ff",
                                     foreground="#00254a",   
                                     font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
@@ -1221,7 +1227,7 @@ def item_values():
     # l3f8.place(x=180,y=0,anchor="nw")
     
 def OnDoubleClick(e):
-    label_1=Label(Canvas1, text="Accounting voucher alteration secondry",borderwidth="0", background="#3385ff",
+    label_1=Label(Canvas1, text="Accounting voucher alteration secondry",width="40",borderwidth="0", background="#3385ff",
                                     foreground="#00254a",   
                                     font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
@@ -1412,15 +1418,18 @@ def group_item_select(ent):
 
 def select_stl():
     global label_1
-    label_1 = Label(Canvas1, text="Select stock group",borderwidth="0", width=20, background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1 = Label(Canvas1, text="Select stock group",borderwidth="0", width=40, background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
     movement_analysis_frame.destroy()
     f1.destroy()
     f55.destroy()
     f66.destroy()
-    f5=Frame(Canvas2,bg="white",relief=RAISED,bd=1)
+    global select_stl_frame
+    select_stl_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    select_stl_frame.place(x=0,y=21,width=1308,height=660)
+    f5=Frame(select_stl_frame,bg="white",relief=RAISED,bd=1)
     f5.pack(pady=15)
-    f6=Frame(Canvas2,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
+    f6=Frame(select_stl_frame,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
     f6.pack()
     f0.destroy()
     l11=Label(f5,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
@@ -1441,7 +1450,7 @@ def select_stl():
 def  Stock_Cate_Analy():
     
     global label_1
-    label_1 = Label(Canvas1, text="Select stock category",borderwidth="0", background="#3385ff", foreground="#00254a",  font="-family {Segoe UI} -size 10 -weight bold ")                                                   
+    label_1 = Label(Canvas1, text="Select stock category",borderwidth="0",width="40", background="#3385ff", foreground="#00254a",  font="-family {Segoe UI} -size 10 -weight bold ")                                                   
     label_1.place(relx=0, rely=0)
     movement_analysis_frame.destroy()
     f0.destroy()
@@ -1473,7 +1482,7 @@ def  Stock_Cate_Analy():
 
 def stock_item_analy():
     global label_1
-    label_1 = Label(Canvas1, text="Select stock item",borderwidth="0", width=20, background="#3385ff",
+    label_1 = Label(Canvas1, text="Select stock item",borderwidth="0", width=40, background="#3385ff",
                                     foreground="#00254a",   
                                     font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
@@ -1481,10 +1490,12 @@ def stock_item_analy():
     f1.destroy()
     f55.destroy()
     f66.destroy()
-
-    f5=Frame(Canvas2,bg="white",relief=RAISED,bd=1)
+    global stock_item_analy_frame
+    stock_item_analy_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    stock_item_analy_frame.place(x=0,y=21,width=1308,height=660)
+    f5=Frame(stock_item_analy_frame,bg="white",relief=RAISED,bd=1)
     f5.pack(pady=15)
-    f6=Frame(Canvas2,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
+    f6=Frame(stock_item_analy_frame,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
     f6.pack()
 
     f0.destroy()
@@ -1514,7 +1525,7 @@ def stock_item_analy():
 
 def group_analysis():
     global label_1
-    label_1 = Label(Canvas1, text="Select Group",borderwidth="0", width=20, background="#3385ff",
+    label_1 = Label(Canvas1, text="Select Group",borderwidth="0", width=40, background="#3385ff",
                                     foreground="#00254a",   
                                     font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
