@@ -151,102 +151,117 @@ def movement_analysis():
 
 
 
-def selected_groups():
-        f1.destroy()
-        f3.destroy()
-        sgaf1.destroy()
-        Canvas2.destroy()
-        global sdbtn
-        sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
-        sdbtn.pack(fill=X,pady=10,padx=10)
-        label_1=Label(Canvas1, text="Stock group analysis",  borderwidth="0", width=40, background="#3385ff",
-                                    foreground="#00254a",   
-                                    font="-family {Segoe UI} -size 10 -weight bold ")
-        label_1.place(relx=0, rely=0)
+def selected_groups(itm):
+    
+    conn=mysql.connector.connect(host="localhost",user="root",password="",database="db")
+    mycursor=conn.cursor()
+    mycursor.execute("select id from app_stock_groups where stock_group_name='"+itm+"'")
+    gid=mycursor.fetchall()[0][0]
+    mycursor.execute("select* from app_stock where stock_group_id_id='"+str(gid)+"'")
+    stock_items=mycursor.fetchall()
+    for i in stock_items:
+        stock_name=i[1]
+        stock_price=i[2]
+        stock_quantity=i[3]
+        stock_eff_rate=i[4]
+        total=int(stock_price)*int(stock_eff_rate)
 
 
-        global selected_groups_frame
-        selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
-        selected_groups_frame.place(x=0,y=21,width=1308,height=660)
-
-        f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
-        f11.grid(row=1,column=0,columnspan=3,ipadx=200)
-        l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
-        l1f1.pack(fill=X)
-        f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        f12.place(x=613,y=0,width=692,height=80)
-        l1f2=Label(f12,text="PRODUCT NAME",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
-        l1f2.place(x=305,y=10,anchor="center")
-        l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
-        l1f3.place(x=305,y=30,anchor="center")
-        l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
-        l1f4.place(x=305,y=50,anchor="center")
-
-        tree0=ttk.Treeview(selected_groups_frame, column=("c1", "c2","c3","c4","c5","c6","c7"), show='headings',height=22)
-
-        tree0.column("#1", anchor=tk.W,width=610)
-
-        tree0.column("#2", anchor=tk.W,width=110)
-
-        tree0.column("#3",anchor=tk.W,width=110)
-
-        tree0.column("#4", anchor=tk.W,width=120)
-
-        tree0.column("#5", anchor=tk.W,width=110)
-
-        tree0.column("#6", anchor=tk.W,width=110)
-
-        tree0.column("#7", anchor=tk.W,width=132)
+    f1.destroy()
+    f3.destroy()
+    sgaf1.destroy()
+    Canvas2.destroy()
+    global sdbtn
+    sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
+    sdbtn.pack(fill=X,pady=10,padx=10)
+    label_1=Label(Canvas1, text="Stock group analysis",  borderwidth="0", width=40, background="#3385ff",
+                                foreground="#00254a",   
+                                font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
 
 
-        tree0.place(x=1,y=139)
+    global selected_groups_frame
+    selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    selected_groups_frame.place(x=0,y=21,width=1308,height=660)
 
-        tree0.insert("",'end',values=("C-Name","12 BTL","13","14","15","16","17"))
-        tree0.bind("<Double-1>", movement_val)
+    f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
+    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
+    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
+    l1f1.pack(fill=X)
+    f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f12.place(x=613,y=0,width=692,height=80)
+    l1f2=Label(f12,text=stock_name,font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f2.place(x=305,y=10,anchor="center")
+    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f3.place(x=305,y=30,anchor="center")
+    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f4.place(x=305,y=50,anchor="center")
+
+    tree0=ttk.Treeview(selected_groups_frame, column=("c1", "c2","c3","c4","c5","c6","c7"), show='headings',height=22)
+
+    tree0.column("#1", anchor=tk.W,width=610)
+
+    tree0.column("#2", anchor=tk.W,width=110)
+
+    tree0.column("#3",anchor=tk.W,width=110)
+
+    tree0.column("#4", anchor=tk.W,width=120)
+
+    tree0.column("#5", anchor=tk.W,width=110)
+
+    tree0.column("#6", anchor=tk.W,width=110)
+
+    tree0.column("#7", anchor=tk.W,width=132)
 
 
+    tree0.place(x=1,y=139)
 
-        f14=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        f14.place(x=614,y=81,width=340,height=58)
-        l1f5=Label(f14,text="INWARDS",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
-        l1f5.place(x=0,y=0,anchor="nw")
-        l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
-        l1f6.place(x=0,y=30,anchor="nw")
-        l1f7=Label(f14,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
-        l1f7.place(x=110,y=30,anchor="nw")
-        l1f8=Label(f14,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
-        l1f8.place(x=225,y=30,anchor="nw")
-
-
-
-        f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        f15.place(x=955,y=81,width=350,height=58)
-        l2f5=Label(f15,text="OUTWARDS",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
-        l2f5.place(x=0,y=0,anchor="nw")
-        l2f6=Label(f15,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
-        l2f6.place(x=0,y=30,anchor="nw")
-        l2f7=Label(f15,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
-        l2f7.place(x=110,y=30,anchor="nw")
-        l2f8=Label(f15,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
-        l2f8.place(x=225,y=30,anchor="nw")
+    tree0.insert("",'end',values=(stock_name,stock_quantity,stock_eff_rate,stock_price))
+    tree0.bind("<Double-1>", movement_val)
 
 
 
-       
-        f18=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        f18.place(x=0,y=598,width=607,height=65)
-        l5f6=Label(f18,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        l5f6.place(x=1,y=0,anchor="nw")
+    f14=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f14.place(x=614,y=81,width=340,height=58)
+    l1f5=Label(f14,text="INWARDS",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f5.place(x=0,y=0,anchor="nw")
+    l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=0,y=30,anchor="nw")
+    l1f7=Label(f14,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=110,y=30,anchor="nw")
+    l1f8=Label(f14,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=225,y=30,anchor="nw")
 
-        f19=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        f19.place(x=610,y=598,width=340,height=65)
-        l6f6=Label(f19,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        l6f6.place(x=0,y=0,anchor="nw")
 
-        f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-        f20.place(x=950,y=598,width=355,height=65)
-        l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-        l7f6.place(x=0,y=0,anchor="nw")
+
+    f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f15.place(x=955,y=81,width=350,height=58)
+    l2f5=Label(f15,text="OUTWARDS",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l2f5.place(x=0,y=0,anchor="nw")
+    l2f6=Label(f15,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f6.place(x=0,y=30,anchor="nw")
+    l2f7=Label(f15,text="Eff.Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f7.place(x=110,y=30,anchor="nw")
+    l2f8=Label(f15,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l2f8.place(x=225,y=30,anchor="nw")
+
+
+
+    
+    f18=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f18.place(x=0,y=598,width=607,height=65)
+    l5f6=Label(f18,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l5f6.place(x=1,y=0,anchor="nw")
+
+    f19=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f19.place(x=610,y=598,width=340,height=65)
+    l6f6=Label(f19,text=total,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l6f6.place(x=0,y=0,anchor="nw")
+
+    f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f20.place(x=950,y=598,width=355,height=65)
+    l7f6=Label(f20,text=total,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l7f6.place(x=0,y=0,anchor="nw")
 
 def selected_category():
     f1.destroy()
@@ -1383,8 +1398,8 @@ def CurSelet(evt):
 
 def stock_group_select(ent):
     value=lb.get(lb.curselection())
-    if value=="Abc-ltd":
-        selected_groups()
+    itm=value[0]
+    selected_groups(itm)
 
 def stock_category_select(ent):
     value=lb.get(lb.curselection())
@@ -1434,18 +1449,36 @@ def select_stl():
     f0.destroy()
     l11=Label(f5,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
     l11.pack(padx=10,pady=10)
+
+    conn = mysql.connector.connect(host ="localhost",
+                                     user = "root",
+                                     password ="",
+                                     db ="db")
+    c= conn.cursor()
+    c.execute('SELECT stock_group_name  FROM app_stock_groups')
+    
+   
+
+
+
+
+
     options_list=["Period","Stock Category Analysis","Stock Item Analysis"]
     cmb=ttk.Combobox(f5 ,values=options_list,font=("times new roman",10,"bold"))
     cmb.pack(fill=X,pady=10,padx=10)
+
     itemsforlistbox=['Abc-ltd','csd-ltd','vdf-ltd','daf-ltd']
     l5=Label(f6,text="List of stock group",font=hfont,bg="blue",fg="black")
     l5.pack(fill=X)
     global lb
     lb=Listbox(f6,height=6,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)  
     lb.bind('<<ListboxSelect>>',stock_group_select)
+
     lb.pack(padx=10,pady=10)
-    for items in itemsforlistbox:
+    for items in c:
         lb.insert(END,items)
+    c.close()
+    
    
 def  Stock_Cate_Analy():
     
