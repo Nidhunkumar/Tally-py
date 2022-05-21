@@ -153,18 +153,8 @@ def movement_analysis():
 
 def selected_groups(itm):
     
-    conn=mysql.connector.connect(host="localhost",user="root",password="",database="db")
-    mycursor=conn.cursor()
-    mycursor.execute("select id from app_stock_groups where stock_group_name='"+itm+"'")
-    gid=mycursor.fetchall()[0][0]
-    mycursor.execute("select* from app_stock where stock_group_id_id='"+str(gid)+"'")
-    stock_items=mycursor.fetchall()
-    for i in stock_items:
-        stock_name=i[1]
-        stock_price=i[2]
-        stock_quantity=i[3]
-        stock_eff_rate=i[4]
-        total=int(stock_price)*int(stock_eff_rate)
+
+    
 
 
     f1.destroy()
@@ -184,19 +174,9 @@ def selected_groups(itm):
     selected_groups_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
     selected_groups_frame.place(x=0,y=21,width=1308,height=660)
 
-    f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
-    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
-    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
-    l1f1.pack(fill=X)
-    f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
-    f12.place(x=613,y=0,width=692,height=80)
-    l1f2=Label(f12,text=stock_name,font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
-    l1f2.place(x=305,y=10,anchor="center")
-    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
-    l1f3.place(x=305,y=30,anchor="center")
-    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
-    l1f4.place(x=305,y=50,anchor="center")
+    
 
+    global tree0
     tree0=ttk.Treeview(selected_groups_frame, column=("c1", "c2","c3","c4","c5","c6","c7"), show='headings',height=22)
 
     tree0.column("#1", anchor=tk.W,width=610)
@@ -216,8 +196,36 @@ def selected_groups(itm):
 
     tree0.place(x=1,y=139)
 
-    tree0.insert("",'end',values=(stock_name,stock_quantity,stock_eff_rate,stock_price))
     tree0.bind("<Double-1>", movement_val)
+
+    conn=mysql.connector.connect(host="localhost",user="root",password="",database="db")
+    mycursor=conn.cursor()
+    mycursor.execute("select id from app_stock_groups where stock_group_name='"+itm+"'")
+    gid=mycursor.fetchall()[0][0]
+    mycursor.execute("select* from app_stock where stock_group_id_id='"+str(gid)+"'")
+   
+    stock_items=mycursor.fetchall()
+    print(stock_items)
+    for i in stock_items:
+
+        tree0.insert("",'end',values=(i[1],i[3],i[2],i[4]))
+
+    mycursor.execute("select sum(stock_price) from app_stock where stock_group_id_id='"+str(gid)+"'")
+    total=mycursor.fetchone()[0]
+    conn.close()
+
+    f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
+    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
+    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
+    l1f1.pack(fill=X)
+    f12=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
+    f12.place(x=613,y=0,width=692,height=80)
+    l1f2=Label(f12,text=itm,font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f2.place(x=305,y=10,anchor="center")
+    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f3.place(x=305,y=30,anchor="center")
+    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f4.place(x=305,y=50,anchor="center")
 
 
 
@@ -231,7 +239,6 @@ def selected_groups(itm):
     l1f7.place(x=110,y=30,anchor="nw")
     l1f8=Label(f14,text="Value",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
     l1f8.place(x=225,y=30,anchor="nw")
-
 
 
     f15=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
@@ -260,7 +267,7 @@ def selected_groups(itm):
 
     f20=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=1)
     f20.place(x=950,y=598,width=355,height=65)
-    l7f6=Label(f20,text=total,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    l7f6=Label(f20,text="000",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     l7f6.place(x=0,y=0,anchor="nw")
 
 def selected_category():
@@ -857,9 +864,25 @@ def Sundry_Debtors_group():
     l7f6.place(x=0,y=0,anchor="nw")
 def movement_val(e):
     sdbtn.destroy()
-    movement_values()
+    curItem = tree0.focus()
+    item_list=(tree0.item(curItem)['values'][0])
+    
+    movement_values(item_list)
 
-def movement_values():
+def movement_values(item_list):
+    
+        # tree0.insert("",'end',values=(i,qty,rate,value,total))
+        # supplier_name=i[1]
+        # qty=i[2]
+        # rate=i[3]
+        # value=i[4]
+        # total=i[5]
+        # date=i[6]
+        
+
+   
+
+
     global sdbtn
     sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
     sdbtn.pack(fill=X,pady=10,padx=10)
@@ -878,7 +901,7 @@ def movement_values():
     l1f1.pack(fill=X)
     f12=Frame(movement_frame,bg="white",relief=RAISED,bd=1)
     f12.place(x=705,y=0,width=600,height=83)
-    l1f2=Label(f12,text="PRODUCT NAME",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f2=Label(f12,text=item_list,font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
     l1f2.place(x=305,y=10,anchor="center")
     l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
     l1f3.place(x=305,y=30,anchor="center")
@@ -904,10 +927,10 @@ def movement_values():
     l1f8.place(x=270,y=30,anchor="nw")
     l1f9=Label(f14,text="Values",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
     l1f9.place(x=400,y=30,anchor="nw")
-
+   
     tree0=ttk.Treeview(f13, column=("c1", "c2","c3","c4","c5"), show='headings',height=3)
 
-    tree0.column("#1", anchor=tk.CENTER,width=686)
+    tree0.column("#1", anchor=tk.W,width=686)
     
     tree0.column("#2", anchor=tk.CENTER,width=120)
 
@@ -918,32 +941,57 @@ def movement_values():
     tree0.column("#5", anchor=tk.CENTER,width=212)
 
     tree0.place(x=0,y=60)
-    tree0.insert("",'end',values=("C-Name","12 BTL","13","14","15"))
-
-
-    l4f6=Label(f13,text="10 Nos",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l4f6.place(x=706,y=150,anchor="nw")
-    l4f8=Label(f13,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l4f8.place(x=860,y=150,anchor="nw")
-    l4f7=Label(f13,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l4f7.place(x=990,y=150,anchor="nw")
-    l4f8=Label(f13,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l4f8.place(x=1100,y=150,anchor="nw")
-
-    horizontal =Frame(f13, bg='black', height=1,width=600)
-    horizontal.place(x=705, y=175)
     tree0.bind("<Double-1>",supplier)
 
+    conn=mysql.connector.connect(host="localhost",user="root",password="",database="db")
+    mycursor=conn.cursor()
+    mycursor.execute("select id from app_stock where stock_name='"+item_list+"'")
+    gid=mycursor.fetchone()[0]
+    print(gid)
+    mycursor.execute("select* from app_supplier where product_name_id='"+str(gid)+"'")
+    items=mycursor.fetchall()
+    for i in items:
+        tree0.insert("",'end',values=(i[1],i[2],i[3],i[4],i[5],i[6]))
+    mycursor.execute("select sum(product_quantity) from app_supplier where product_name_id='"+str(gid)+"'")
+    tqty=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_eff_rate) from app_supplier where product_name_id='"+str(gid)+"'")
+    trate=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_value) from app_supplier where product_name_id='"+str(gid)+"'")
+    tvalue=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_price) from app_supplier where product_name_id='"+str(gid)+"'")
+    tprice=mycursor.fetchone()[0]
+    tree0.insert("",'end',values=("Total",tqty,tprice,trate,tvalue))
 
 
 
+    conn.close()
+
+
+
+    
+
+
+    # l4f6=Label(f13,text=tqty,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f6.place(x=706,y=150,anchor="nw")
+    # l4f8=Label(f13,text=rate,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f8.place(x=860,y=150,anchor="nw")
+    # l4f7=Label(f13,text=value,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f7.place(x=990,y=150,anchor="nw")
+    # l4f8=Label(f13,text=total,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f8.place(x=1100,y=150,anchor="nw")
+
+    # horizontal =Frame(f13, bg='black', height=1,width=600)
+    # horizontal.place(x=705, y=175)
+
+
+    
     f13bt4=Label(f13,text="Movement outwards",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     f13bt4.place(x=0,y=170,anchor="nw")
     f13bt5=Label(f13,text="Buyers",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     f13bt5.place(x=10,y=200,anchor="nw")
     tree1=ttk.Treeview(f13, column=("c1", "c2","c3","c4","c5"), show='headings',height=3)
 
-    tree1.column("#1", anchor=tk.CENTER,width=686)
+    tree1.column("#1", anchor=tk.W,width=686)
 
     
     tree1.column("#2", anchor=tk.CENTER,width=120)
@@ -954,20 +1002,41 @@ def movement_values():
     tree1.column("#5", anchor=tk.CENTER,width=212)
 
     tree1.place(x=0,y=230)
-    tree1.insert("",'end',values=("C-Name","12 BTL","13","14","15"))
-
-    l46=Label(f13,text="10 Nos",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l46.place(x=706,y=330,anchor="nw")
-    l48=Label(f13,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l48.place(x=860,y=330,anchor="nw")
-    l47=Label(f13,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l47.place(x=990,y=330,anchor="nw")
-    l48=Label(f13,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l48.place(x=1100,y=330,anchor="nw")
-
-    horizontal =Frame(f13, bg='black', height=1,width=600)
-    horizontal.place(x=705, y=355)
     tree1.bind("<Double-1>",buyer)
+    conn=mysql.connector.connect(host="localhost",user="root",password="",database="db")
+    mycursor=conn.cursor()
+    mycursor.execute("select id from app_stock where stock_name='"+item_list+"'")
+    gid=mycursor.fetchone()[0]
+    mycursor.execute("select * from app_buyer where product_name_id='"+str(gid)+"'")
+    items=mycursor.fetchall()
+    for i in items:
+        tree1.insert("",'end',values=(i[1],i[2],i[3],i[4],i[5],i[6]))
+    mycursor.execute("select sum(product_quantity) from app_buyer where product_name_id='"+str(gid)+"'")
+    tqty=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_eff_rate) from app_buyer where product_name_id='"+str(gid)+"'")
+    trate=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_value) from app_buyer where product_name_id='"+str(gid)+"'")
+    tvalue=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_price) from app_buyer where product_name_id='"+str(gid)+"'")
+    tprice=mycursor.fetchone()[0]
+    tree1.insert("",'end',values=("Total",tqty,tprice,trate,tvalue))
+    mycursor.close()
+
+
+
+    # l46=Label(f13,text="10 Nos",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l46.place(x=706,y=330,anchor="nw")
+    # l48=Label(f13,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l48.place(x=860,y=330,anchor="nw")
+    # l47=Label(f13,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l47.place(x=990,y=330,anchor="nw")
+    # l48=Label(f13,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l48.place(x=1100,y=330,anchor="nw")
+
+    # horizontal =Frame(f13, bg='black', height=1,width=600)
+    # horizontal.place(x=705, y=355)
+    
+
 
 
     
