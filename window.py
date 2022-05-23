@@ -205,7 +205,7 @@ def selected_groups(itm):
     mycursor.execute("select* from app_stock where stock_group_id_id='"+str(gid)+"'")
    
     stock_items=mycursor.fetchall()
-    print(stock_items)
+    # print(stock_items)
     for i in stock_items:
 
         tree0.insert("",'end',values=(i[1],i[3],i[2],i[4]))
@@ -927,31 +927,31 @@ def movement_values(item_list):
     l1f8.place(x=270,y=30,anchor="nw")
     l1f9=Label(f14,text="Values",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
     l1f9.place(x=400,y=30,anchor="nw")
-   
-    tree0=ttk.Treeview(f13, column=("c1", "c2","c3","c4","c5"), show='headings',height=3)
+    global tree00
+    tree00=ttk.Treeview(f13, column=("c1", "c2","c3","c4","c5"), show='headings',height=3)
 
-    tree0.column("#1", anchor=tk.W,width=686)
+    tree00.column("#1", anchor=tk.W,width=686)
     
-    tree0.column("#2", anchor=tk.CENTER,width=120)
+    tree00.column("#2", anchor=tk.CENTER,width=120)
 
-    tree0.column("#3",anchor=tk.CENTER,width=140)
+    tree00.column("#3",anchor=tk.CENTER,width=140)
 
-    tree0.column("#4", anchor=tk.CENTER,width=140)
+    tree00.column("#4", anchor=tk.CENTER,width=140)
 
-    tree0.column("#5", anchor=tk.CENTER,width=212)
+    tree00.column("#5", anchor=tk.CENTER,width=212)
 
-    tree0.place(x=0,y=60)
-    tree0.bind("<Double-1>",supplier)
+    tree00.place(x=0,y=60)
+    qw=item_list
+    tree00.bind("<Double-1>",supplier)
 
     conn=mysql.connector.connect(host="localhost",user="root",password="",database="db")
     mycursor=conn.cursor()
     mycursor.execute("select id from app_stock where stock_name='"+item_list+"'")
     gid=mycursor.fetchone()[0]
-    print(gid)
     mycursor.execute("select* from app_supplier where product_name_id='"+str(gid)+"'")
     items=mycursor.fetchall()
     for i in items:
-        tree0.insert("",'end',values=(i[1],i[2],i[3],i[4],i[5],i[6]))
+        tree00.insert("",'end',values=(i[1],i[2],i[3],i[4],i[5],i[6]))
     mycursor.execute("select sum(product_quantity) from app_supplier where product_name_id='"+str(gid)+"'")
     tqty=mycursor.fetchone()[0]
     mycursor.execute("select sum(product_eff_rate) from app_supplier where product_name_id='"+str(gid)+"'")
@@ -960,7 +960,7 @@ def movement_values(item_list):
     tvalue=mycursor.fetchone()[0]
     mycursor.execute("select sum(product_price) from app_supplier where product_name_id='"+str(gid)+"'")
     tprice=mycursor.fetchone()[0]
-    tree0.insert("",'end',values=("Total",tqty,tprice,trate,tvalue))
+    tree00.insert("",'end',values=("Total",tqty,tprice,trate,tvalue))
 
 
 
@@ -989,6 +989,7 @@ def movement_values(item_list):
     f13bt4.place(x=0,y=170,anchor="nw")
     f13bt5=Label(f13,text="Buyers",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     f13bt5.place(x=10,y=200,anchor="nw")
+
     tree1=ttk.Treeview(f13, column=("c1", "c2","c3","c4","c5"), show='headings',height=3)
 
     tree1.column("#1", anchor=tk.W,width=686)
@@ -1064,7 +1065,9 @@ def movement_values(item_list):
 	
 # ]
 def supplier(e):
-   item_values()
+    curItem = tree00.focus()
+    item_list=(tree00.item(curItem)['values'][0])
+    item_values(item_list)
 
 def buyer(e):
    buyer_dtls()
@@ -1172,7 +1175,7 @@ def buyer_dtls():
     l12=Label(f11,text="333322",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l12.place(x=1200,y=0)
    
-def item_values():
+def item_values(item_list):
     label_1=Label(Canvas1, text="Item voucher analysis",borderwidth="0", width=40, background="#3385ff",
                                     foreground="#00254a",   
                                     font="-family {Segoe UI} -size 10 -weight bold ")
@@ -1184,11 +1187,11 @@ def item_values():
     item_nm.place(x=0,y=21)
     lb1=Label(item_nm,text="Stock Item:",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     lb1.place(x=0,y=0,anchor="nw")
-    lb2=Label(item_nm,text="Item Name",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    lb2=Label(item_nm,text="item_name",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     lb2.place(x=80,y=0,anchor="nw")
     lb3=Label(item_nm,text="Inwards under ledger:",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     lb3.place(x=0,y=20,anchor="nw")
-    lb4=Label(item_nm,text="Item Name",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    lb4=Label(item_nm,text=item_list,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     lb4.place(x=150,y=20,anchor="nw")
     lb5=Label(item_nm,text="for apr-10-22",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     lb5.place(x=1200,y=0,anchor="nw")
@@ -1202,40 +1205,64 @@ def item_values():
     global tree
     tree = ttk.Treeview(item_val, column=("c1", "c2", "c3","c4", "c5", "c6","c7", "c8"), show='headings', height=650)
 
-    tree.column("#1", anchor=tk.CENTER,width=50)
+    tree.column("#1", anchor=tk.CENTER,width=100)
 
     tree.heading("#1", text="Date")
 
-    tree.column("#2", anchor=tk.CENTER,width=830)
+    tree.column("#2", anchor=tk.W,width=600)
 
     tree.heading("#2", text="Perticulars")
 
-    tree.column("#3", anchor=tk.CENTER,width=70)
+    tree.column("#3", anchor=tk.CENTER,width=100)
 
     tree.heading("#3", text="Quantity")
 
-    tree.column("#4", anchor=tk.CENTER,width=70)
+    tree.column("#4", anchor=tk.CENTER,width=100)
 
     tree.heading("#4", text="Basic Rate")
 
-    tree.column("#5", anchor=tk.CENTER,width=70)
+    tree.column("#5", anchor=tk.CENTER,width=100)
 
     tree.heading("#5", text="Basic value")
 
-    tree.column("#6", anchor=tk.CENTER,width=70)
+    tree.column("#6", anchor=tk.CENTER,width=100)
 
     tree.heading("#6", text="Added cost")
 
-    tree.column("#7", anchor=tk.CENTER,width=70)
+    tree.column("#7", anchor=tk.CENTER,width=100)
 
     tree.heading("#7", text="Total value")
 
-    tree.column("#8", anchor=tk.CENTER,width=70)
+    tree.column("#8", anchor=tk.CENTER,width=100)
 
     tree.heading("#8", text="Eff.rate")
     tree.pack()
     tree.bind("<Double-1>",OnDoubleClick)
+    conn = mysql.connector.connect(host ="localhost",
+                                     user = "root",
+                                     password ="",
+                                     db ="db")
+    c= conn.cursor()
+   
+    c.execute("SELECT * FROM app_supplier  where supplier_name='"+str(item_list)+"'")
+    records = c.fetchall()
+
+    for i in records:
+        tree.insert("", "end", values=(i[6], i[1], i[2], i[3], i[4], i[5]))
     
+    c.execute("select sum(product_quantity) from app_supplier  where supplier_name='"+str(item_list)+"'")
+    tqt=c.fetchone()[0]
+    c.execute("select sum(product_price) FROM app_supplier  where supplier_name='"+str(item_list)+"'")
+    tqp=c.fetchone()[0]
+    c.execute("select sum(product_eff_rate) FROM app_supplier  where supplier_name='"+str(item_list)+"'")
+    teff=c.fetchone()[0]
+    c.execute("select sum(product_value) FROM app_supplier  where supplier_name='"+str(item_list)+"'")
+    tval=c.fetchone()[0]
+    tree.insert("", 'end', values=("Total","",tqt, tqp,teff, tval))
+
+        
+
+
 
 
 
@@ -1249,53 +1276,41 @@ def item_values():
     l4f6=Label(horizontal,text="Total",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     l4f6.place(x=0,y=5,anchor="nw")
 
-    l4f11=Label(horizontal,text="10 Nos",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l4f11.place(x=900,y=5,anchor="nw")
-    l4f10=Label(horizontal,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l4f10.place(x=1000,y=5,anchor="nw")
-    l4f9=Label(horizontal,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l4f9.place(x=1060,y=5,anchor="nw")
-    l4f8=Label(horizontal,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l4f8.place(x=1130,y=5,anchor="nw")
-    l4f7=Label(horizontal,text="1000",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l4f7.place(x=1190,y=5,anchor="nw")
-    l4f8=Label(horizontal,text="10000",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    l4f8.place(x=1250,y=5,anchor="nw")
+    # l4f11=Label(horizontal,text=tqt,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f11.place(x=900,y=5,anchor="nw")
+    # l4f10=Label(horizontal,text=tqp,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f10.place(x=1000,y=5,anchor="nw")
+    # l4f9=Label(horizontal,text=teff,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f9.place(x=1060,y=5,anchor="nw")
+    # l4f8=Label(horizontal,text=tval,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f8.place(x=1130,y=5,anchor="nw")
+    # l4f7=Label(horizontal,text="1000",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f7.place(x=1190,y=5,anchor="nw")
+    # l4f8=Label(horizontal,text="10000",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f8.place(x=1250,y=5,anchor="nw")
 
     
 
-    conn = mysql.connector.connect(host ="localhost",
-                                     user = "root",
-                                     password ="",
-                                     db ="tally")
-    c= conn.cursor()
-
+   
     
    
 
     
-    c.execute("""CREATE TABLE if not exists stock (
-        first_name text,
-        last_name text,
-        id integer,
-        address text,
-        city text,
-        state text,
-        zipcode text)
-        """)
+    # c.execute("""CREATE TABLE if not exists stock (
+    #     first_name text,
+    #     last_name text,
+    #     id integer,
+    #     address text,
+    #     city text,
+    #     state text,
+    #     zipcode text)
+    #     """)
    
     
     # for record in data:
     #     c.execute("INSERT INTO stock VALUES (%s, %s, %s, %s, %s, %s, %s)", record)
     # conn.commit()
-    c.execute("SELECT * FROM stock")
-    records = c.fetchall()
-
-    for record in records:
-        tree.insert("", "end", values=record)
     
-        
-
      
 
 
@@ -1311,6 +1326,15 @@ def item_values():
     # l3f8.place(x=180,y=0,anchor="nw")
     
 def OnDoubleClick(e):
+    item_list=tree.item(tree.selection())['values'][1]
+    supplier_bill(item_list)
+
+def supplier_bill(item_list):
+
+
+
+
+
     label_1=Label(Canvas1, text="Accounting voucher alteration secondry",width="40",borderwidth="0", background="#3385ff",
                                     foreground="#00254a",   
                                     font="-family {Segoe UI} -size 10 -weight bold ")
@@ -1390,32 +1414,18 @@ def OnDoubleClick(e):
     conn = mysql.connector.connect(host ="localhost",
                                      user = "root",
                                      password ="",
-                                     db ="tally")
+                                     db ="db")
     c= conn.cursor()
-
-    
-   
-
-    
-    # c.execute("""CREATE TABLE if not exists stock (
-    #     first_name text,
-    #     last_name text,
-    #     id integer,
-    #     address text,
-    #     city text,
-    #     state text,
-    #     zipcode text)
-    #     """)
-   
-    
-    # for record in data:
-    #     c.execute("INSERT INTO stock VALUES (%s, %s, %s, %s, %s, %s, %s)", record)
-    # conn.commit()
-    c.execute("SELECT * FROM stock")
+    c.execute("select id from app_supplier where supplier_name='"+str(item_list)+"'")
+    sid=c.fetchone()[0]
+    print(sid)
+    c.execute("SELECT * FROM app_supplier_bill  where supplier_name_id='"+str(sid)+"'")
     records = c.fetchall()
 
-    for record in records:
-        tree.insert("", "end", values=record)
+    for i in records:
+         tree.insert("", "end", values=(i[0], i[1], i[2], i[3], i[4], i[5]))
+    
+
     f11=Frame(Canvas1,bg="white",relief=RAISED,bd=1)
     f11.place(x=0,y=578,width=1308,height=110)
     l11=Label(f11,text="Narration",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
@@ -1449,7 +1459,7 @@ f1.pack()
    
 def CurSelet(evt):
     value=lb.get(lb.curselection())
-    print (value)   
+    # print (value)   
     if value=="Stock Group Analysis":
         select_stl()
 
