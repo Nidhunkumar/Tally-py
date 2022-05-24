@@ -1346,46 +1346,7 @@ def supplier_bill(item_list):
     item_nm.destroy()
     item_val.destroy()
     global bill_frame
-    bill_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=2)
-    bill_frame.place(x=0,y=20,width=1308,height=200)
-    l1f1=Label(bill_frame,text="Purchase No:",font=("times new roman",11,"bold"),bg="#00254a",fg="white",borderwidth=0)
-    l1f1.place(x=0,y=0)
-    l1f2=Label(bill_frame,text="1",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f2.place(x=125,y=0)
-    l1f3=Label(bill_frame,text="Supplier invoice no:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f3.place(x=0,y=20)
-
-    l1f4=Label(bill_frame,text="1",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f4.place(x=135,y=20)
-    
-    l1f5=Label(bill_frame,text="Party A/c name:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f5.place(x=0,y=40)
-    l1f6=Label(bill_frame,text="abc",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f6.place(x=125,y=40)
-    l1f7=Label(bill_frame,text="Current balance:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f7.place(x=0,y=60)
-    l1f8=Label(bill_frame,text="10000cr",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f8.place(x=125,y=60)
-    l1f9=Label(bill_frame,text="Purchase ledger:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f9.place(x=0,y=80)
-    l1f10=Label(bill_frame,text="Purchase acc",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f10.place(x=125,y=80)
-    l1f11=Label(bill_frame,text="Current balance:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f11.place(x=0,y=100)
-    l1f12=Label(bill_frame,text="10000cr",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f12.place(x=125,y=100)
-    l1f13=Label(bill_frame,text="Date:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f13.place(x=300,y=20)
-    l1f14=Label(bill_frame,text="01/01/2020",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f14.place(x=350,y=20)
-    E1f15=Entry(bill_frame,width=20,font=("times new roman",11,"bold"),bg="yellow",fg="black",borderwidth=0)
-    E1f15.place(x=1138,y=10)
-    E1f15.insert(0,"01-10-21")
-    l1f16=Label(bill_frame,text="Friday",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f16.place(x=1150,y=30)
-    horizontal1 =Frame(bill_frame, bg='black', height=1,width=1308)
-    horizontal1.place(x=0, y=175)
-
+   
     bill_tbl=Frame(Canvas1,bg="white",relief=RAISED,bd=1)
     bill_tbl.place(x=0,y=178,width=1308,height=400)
 
@@ -1418,20 +1379,73 @@ def supplier_bill(item_list):
     c= conn.cursor()
     c.execute("select id from app_supplier where supplier_name='"+str(item_list)+"'")
     sid=c.fetchone()[0]
-    print(sid)
     c.execute("SELECT * FROM app_supplier_bill  where supplier_name_id='"+str(sid)+"'")
     records = c.fetchall()
+    c.execute("select * from app_supplier_bill inner join app_supplier on app_supplier_bill.supplier_name_id=app_supplier.id where app_supplier_bill.supplier_name_id='"+str(sid)+"'")
+    nw=c.fetchall()
 
-    for i in records:
-         tree.insert("", "end", values=(i[0], i[1], i[2], i[3], i[4], i[5]))
+    # for i in nw:
+    #     pno=i[0]
+    #     supinv=i[1]
+    #     date=i[2]
+    #     cbl=i[3]
+    #     acc=i[4]
+    #     cbl2=i
+
+        
+    #     tree.insert("", "end", values=(i[13], i[6], i[7], i[8]))
     
+
+    bill_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=2)
+    bill_frame.place(x=0,y=20,width=1308,height=200)
+    l1f1=Label(bill_frame,text="Purchase No:",font=("times new roman",11,"bold"),bg="#00254a",fg="white",borderwidth=0)
+    l1f1.place(x=0,y=0)
+    l1f2=Label(bill_frame,text=pno,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f2.place(x=125,y=0)
+    l1f3=Label(bill_frame,text="Supplier invoice no:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f3.place(x=0,y=20)
+
+    l1f4=Label(bill_frame,text=supinv,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f4.place(x=135,y=20)
+    
+    l1f5=Label(bill_frame,text="Party A/c name:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f5.place(x=0,y=40)
+    l1f6=Label(bill_frame,text=,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=125,y=40)
+    l1f7=Label(bill_frame,text="Current balance:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=0,y=60)
+    l1f8=Label(bill_frame,text="10000cr",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=125,y=60)
+    l1f9=Label(bill_frame,text="Purchase ledger:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f9.place(x=0,y=80)
+    l1f10=Label(bill_frame,text="Purchase acc",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f10.place(x=125,y=80)
+    l1f11=Label(bill_frame,text="Current balance:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f11.place(x=0,y=100)
+    l1f12=Label(bill_frame,text="10000cr",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f12.place(x=125,y=100)
+    l1f13=Label(bill_frame,text="Date:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f13.place(x=300,y=20)
+    l1f14=Label(bill_frame,text="01/01/2020",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f14.place(x=350,y=20)
+    E1f15=Entry(bill_frame,width=20,font=("times new roman",11,"bold"),bg="yellow",fg="black",borderwidth=0)
+    E1f15.place(x=1138,y=10)
+    E1f15.insert(0,"01-10-21")
+    l1f16=Label(bill_frame,text="Friday",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f16.place(x=1150,y=30)
+    horizontal1 =Frame(bill_frame, bg='black', height=1,width=1308)
+    horizontal1.place(x=0, y=175)
+
 
     f11=Frame(Canvas1,bg="white",relief=RAISED,bd=1)
     f11.place(x=0,y=578,width=1308,height=110)
     l11=Label(f11,text="Narration",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l11.place(x=0,y=0)
-    E11=Entry(f11,width=50,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=1)
-    E11.place(x=0,y=20,height=50)
+
+    # E11=Entry(f11,width=50,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=1)
+    # E11.place(x=0,y=20,height=50)
+    tex=Text(f11,width=50,height=5,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=1)
+    tex.place(x=0,y=20,height=50)
     
     l12=Label(f11,text="333322",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l12.place(x=1200,y=0)
