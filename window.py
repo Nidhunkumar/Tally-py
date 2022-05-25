@@ -1350,27 +1350,31 @@ def supplier_bill(item_list):
     bill_tbl=Frame(Canvas1,bg="white",relief=RAISED,bd=1)
     bill_tbl.place(x=0,y=178,width=1308,height=400)
 
+    global tree12
+    tree12 = ttk.Treeview(bill_tbl, column=("c1", "c2", "c3","c4"), show='headings',height=350)
 
-    global tree
-    tree = ttk.Treeview(bill_tbl, column=("c1", "c2", "c3","c4"), show='headings',height=350)
+    tree12.column("#1", anchor=tk.W,width=830)
 
-    tree.column("#1", anchor=tk.W,width=830)
+    tree12.heading("#1", text="Item Name",anchor=tk.W)
 
-    tree.heading("#1", text="Item Name",anchor=tk.W)
+    tree12.column("#2", anchor=tk.CENTER,width=70)
 
-    tree.column("#2", anchor=tk.CENTER,width=70)
+    tree12.heading("#2", text="Quantity")
 
-    tree.heading("#2", text="Quantity")
+    tree12.column("#3", anchor=tk.CENTER,width=70)
 
-    tree.column("#3", anchor=tk.CENTER,width=70)
+    tree12.heading("#3", text="Rate")
 
-    tree.heading("#3", text="Rate")
+    tree12.column("#4", anchor=tk.CENTER,width=70)
 
-    tree.column("#4", anchor=tk.CENTER,width=70)
+    tree12.heading("#4", text="Amount")
 
-    tree.heading("#4", text="Amount")
+    tree12.pack(fill=BOTH)
+        
 
-    tree.pack(fill=tk.BOTH)
+
+
+    
 
     conn = mysql.connector.connect(host ="localhost",
                                      user = "root",
@@ -1383,21 +1387,19 @@ def supplier_bill(item_list):
     records = c.fetchall()
     c.execute("select * from app_supplier_bill inner join app_supplier on app_supplier_bill.supplier_name_id=app_supplier.id where app_supplier_bill.supplier_name_id='"+str(sid)+"'")
     nw=c.fetchall()
+    print(records)
+    for i in records:
+        pno=i[0]
+        supinv=i[1]
+        date=i[2]
+        cbl=i[3]
+        acc=i[4]
+        cbl2=i[5]
+        tree12.insert("", "end", values=(i[1],i[2],i[3],i[4]))
 
-    # for i in nw:
-    #     pno=i[0]
-    #     supinv=i[1]
-    #     date=i[2]
-    #     cbl=i[3]
-    #     acc=i[4]
-    #     cbl2=i
-
-        
-    #     tree.insert("", "end", values=(i[13], i[6], i[7], i[8]))
-    
 
     bill_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=2)
-    bill_frame.place(x=0,y=20,width=1308,height=200)
+    bill_frame.place(x=0,y=20,width=1308,height=160)
     l1f1=Label(bill_frame,text="Purchase No:",font=("times new roman",11,"bold"),bg="#00254a",fg="white",borderwidth=0)
     l1f1.place(x=0,y=0)
     l1f2=Label(bill_frame,text=pno,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
@@ -1410,23 +1412,23 @@ def supplier_bill(item_list):
     
     l1f5=Label(bill_frame,text="Party A/c name:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l1f5.place(x=0,y=40)
-    l1f6=Label(bill_frame,text=,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6=Label(bill_frame,text="Apple",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l1f6.place(x=125,y=40)
     l1f7=Label(bill_frame,text="Current balance:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l1f7.place(x=0,y=60)
-    l1f8=Label(bill_frame,text="10000cr",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8=Label(bill_frame,text=cbl,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l1f8.place(x=125,y=60)
     l1f9=Label(bill_frame,text="Purchase ledger:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l1f9.place(x=0,y=80)
-    l1f10=Label(bill_frame,text="Purchase acc",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f10=Label(bill_frame,text=acc,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l1f10.place(x=125,y=80)
     l1f11=Label(bill_frame,text="Current balance:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l1f11.place(x=0,y=100)
-    l1f12=Label(bill_frame,text="10000cr",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f12=Label(bill_frame,text=cbl2,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l1f12.place(x=125,y=100)
     l1f13=Label(bill_frame,text="Date:",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l1f13.place(x=300,y=20)
-    l1f14=Label(bill_frame,text="01/01/2020",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f14=Label(bill_frame,text=date,font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l1f14.place(x=350,y=20)
     E1f15=Entry(bill_frame,width=20,font=("times new roman",11,"bold"),bg="yellow",fg="black",borderwidth=0)
     E1f15.place(x=1138,y=10)
@@ -1450,10 +1452,7 @@ def supplier_bill(item_list):
     l12=Label(f11,text="333322",font=("times new roman",11,"bold"),bg="white",fg="black",borderwidth=0)
     l12.place(x=1200,y=0)
     
-    
-        
-
-
+   
 
 
 
@@ -1501,9 +1500,12 @@ def stock_category_select(ent):
 
 
 def stock_item_select(ent):
+    # value=lb.get(lb.curselection())
+    # if value=="soap":
+    #     selected_item()
     value=lb.get(lb.curselection())
-    if value=="soap":
-        selected_item()
+    item_list=value[0]
+    movement_values(item_list)
 
 
 def group_item_select(ent):
@@ -1549,6 +1551,7 @@ def select_stl():
                                      db ="db")
     c= conn.cursor()
     c.execute('SELECT stock_group_name  FROM app_stock_groups')
+    dt=c.fetchall()
     
    
 
@@ -1560,7 +1563,6 @@ def select_stl():
     cmb=ttk.Combobox(f5 ,values=options_list,font=("times new roman",10,"bold"))
     cmb.pack(fill=X,pady=10,padx=10)
 
-    itemsforlistbox=['Abc-ltd','csd-ltd','vdf-ltd','daf-ltd']
     l5=Label(f6,text="List of stock group",font=hfont,bg="blue",fg="black")
     l5.pack(fill=X)
     global lb
@@ -1568,7 +1570,7 @@ def select_stl():
     lb.bind('<<ListboxSelect>>',stock_group_select)
 
     lb.pack(padx=10,pady=10)
-    for items in c:
+    for items in dt:
         lb.insert(END,items)
     c.close()
     
@@ -1600,11 +1602,19 @@ def  Stock_Cate_Analy():
     l5.pack(fill=X)
     global lb
     lb=Listbox(f6,height=6,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)
-    lb.bind('<<ListboxSelect>>',stock_category_select)
+    lb.bind('<<ListboxSelect>>',stock_group_select)
     lb.pack(padx=10,pady=10)
-    for items in itemsforlistbox:
-        lb.insert(END,items)
+    conn = mysql.connector.connect(host ="localhost",
+                                     user = "root",
+                                     password ="",
+                                     db ="db")
+    c= conn.cursor()
+    c.execute('SELECT stock_group_name  FROM app_stock_groups')
+    dt=c.fetchall()
 
+    for items in dt:
+        lb.insert(END,items)
+    c.close()
 
 def stock_item_analy():
     global label_1
@@ -1645,7 +1655,16 @@ def stock_item_analy():
    
     lb.bind('<<ListboxSelect>>',stock_item_select)
     lb.pack(padx=10,pady=10)
-    for items in itemsforlistbox:
+
+    conn = mysql.connector.connect(host ="localhost",
+                                     user = "root",
+                                     password ="",
+                                     db ="db")
+    c= conn.cursor()
+    c.execute('SELECT stock_name  FROM app_stock')
+    dt=c.fetchall()
+
+    for items in dt:
         lb.insert(END,items)
 
 
