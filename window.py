@@ -214,6 +214,10 @@ def selected_groups(itm):
     total=mycursor.fetchone()[0]
     conn.close()
 
+    # global sdbtn
+    # sdbtn=Button(Canvas3,text="date",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
+    # sdbtn.pack(fill=X,pady=10,padx=10)
+
     f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
     f11.grid(row=1,column=0,columnspan=3,ipadx=200)
     l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,width=23,height=7)
