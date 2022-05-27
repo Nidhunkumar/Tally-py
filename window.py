@@ -63,7 +63,7 @@ sbmibtn=Button(screen,text='F1:Help',borderwidth="0",background="#023047",
                                      foreground="white",width=10,font="-family {Segoe UI} -size 12 -weight bold ").place(x=1400,y=10)
 #main-canvas
 global Canvas1
-Canvas1 = tk.Canvas( background="#3385ff",relief=FLAT,bd=0,highlightthickness=0)
+Canvas1 = tk.Canvas(screen, background="#3385ff",relief=FLAT,bd=0,highlightthickness=0)
 Canvas1.place(relx=0, rely=0.07, relheight=0.800, relwidth=.850)
 Label5 = Label(Canvas1,text="C-Name",borderwidth="0", background="#3385ff",
                                     foreground="#00254a",
@@ -104,6 +104,13 @@ f3.pack()
 global sgaf1
 sgaf1=Frame(Canvas2,bg="white",relief=RIDGE,bd=1)
 sgaf1.pack(pady=10)
+def date_select():
+    global date_select_frame
+    date_select_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    date_select_frame.place(x=0,y=21,width=1308,height=660)
+
+  
+
 
 def movement_analysis():
     
@@ -114,7 +121,10 @@ def movement_analysis():
     label_0.place(relx=0, rely=0)
     
     f1.destroy()
-    
+    global bk
+    bk = Button(Canvas1, text="x", command=main, activeforeground="black", activebackground="#3385ff",
+            fg='black', bg='#3385ff', borderwidth=0, font=('Arial 16 bold'),).place(x=1280, y=0,height=18)
+
     global movement_analysis_frame
     movement_analysis_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
     movement_analysis_frame.place(x=0,y=21,width=1308,height=660)
@@ -123,21 +133,21 @@ def movement_analysis():
     f55=Frame(movement_analysis_frame,bg="white",relief=RAISED,bd=1)
     f55.pack(pady=15)
     f66=Frame(movement_analysis_frame,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
-    f66.pack()
+    f66.place(x=860,y=200,width=300,height=300)
 
     f0.destroy()
-    l11=Label(f55,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
-    l11.pack(padx=10,pady=10)
+    # l11=Label(f55,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
+    # l11.pack(padx=10,pady=10)
     
-    options_list=["Period","Stock Category Analysis","Stock Item Analysis"]
+    # options_list=["Period","Stock Category Analysis","Stock Item Analysis"]
 
 
-    cmb=ttk.Combobox(f55 ,values=options_list,font=("times new roman",10,"bold"))
-    cmb.pack(fill=X,pady=10,padx=10)
+    # cmb=ttk.Combobox(f55 ,values=options_list,font=("times new roman",10,"bold"))
+    # cmb.pack(fill=X,pady=10,padx=10)
 
     itemsforlistbox=['Stock Group Analysis','Stock Category Analysis','Stock Item Analysis','Group Analysis','Exit']
 
-    l5=Label(f66,text="Movement Analysis",font=hfont,bg="blue",fg="black")
+    l5=Label(f66,text="Movement Analysis",font=hfont,bg="#0851a8",fg="white")
     l5.pack(fill=X)
 
     global lb
@@ -148,7 +158,6 @@ def movement_analysis():
     lb.pack(padx=10,pady=10)
     for items in itemsforlistbox:
         lb.insert(END,items)
-
 
 
 def selected_groups(itm):
@@ -168,6 +177,9 @@ def selected_groups(itm):
                                 foreground="#00254a",   
                                 font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
+    bk = Button(Canvas1, text="x", command=select_stl, activeforeground="black", activebackground="#3385ff",
+            fg='black', bg='#3385ff', borderwidth=0, font=('Arial 16 bold'),).place(x=1280, y=0,height=18)
+    
 
 
     global selected_groups_frame
@@ -214,9 +226,8 @@ def selected_groups(itm):
     total=mycursor.fetchone()[0]
     conn.close()
 
-    # global sdbtn
-    # sdbtn=Button(Canvas3,text="date",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
-    # sdbtn.pack(fill=X,pady=10,padx=10)
+    # dtsel=Button(Canvas3,text="date",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=date_select)
+    # dtsel.pack(fill=X,pady=10,padx=10)
 
     f11=Frame(selected_groups_frame,bg="white",relief=RAISED,bd=0)
     f11.grid(row=1,column=0,columnspan=3,ipadx=200)
@@ -868,6 +879,7 @@ def Sundry_Debtors_group():
     l7f6.place(x=0,y=0,anchor="nw")
 def movement_val(e):
     sdbtn.destroy()
+    # dtsel.destroy()
     curItem = tree0.focus()
     item_list=(tree0.item(curItem)['values'][0])
     
@@ -1492,6 +1504,7 @@ def CurSelet(evt):
         group_analysis()
         
 
+
 def stock_group_select(ent):
     value=lb.get(lb.curselection())
     itm=value[0]
@@ -1534,6 +1547,11 @@ def select_stl():
     global label_1
     label_1 = Label(Canvas1, text="Select stock group",borderwidth="0", width=40, background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
     label_1.place(relx=0, rely=0)
+    bk = Button(Canvas1, text="x", command=movement_analysis, activeforeground="black", activebackground="#3385ff",
+            fg='black', bg='#3385ff', borderwidth=0, font=('Arial 16 bold'),).place(x=1280, y=0,height=18)
+    
+    
+   
     movement_analysis_frame.destroy()
     f1.destroy()
     f55.destroy()
@@ -1542,12 +1560,18 @@ def select_stl():
     select_stl_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
     select_stl_frame.place(x=0,y=21,width=1308,height=660)
     f5=Frame(select_stl_frame,bg="white",relief=RAISED,bd=1)
-    f5.pack(pady=15)
+    f5.pack()
     f6=Frame(select_stl_frame,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
     f6.pack()
     f0.destroy()
     l11=Label(f5,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
-    l11.pack(padx=10,pady=10)
+    l11.pack()
+    E1 = Entry(f5,width=30,borderwidth="1",bg="#f7d065")
+    E1.pack(padx=10,pady=20)
+   
+
+    
+    
 
     conn = mysql.connector.connect(host ="localhost",
                                      user = "root",
@@ -1564,26 +1588,46 @@ def select_stl():
 
 
     options_list=["Period","Stock Category Analysis","Stock Item Analysis"]
-    cmb=ttk.Combobox(f5 ,values=options_list,font=("times new roman",10,"bold"))
-    cmb.pack(fill=X,pady=10,padx=10)
+    # cmb=ttk.Combobox(f5 ,values=options_list,font=("times new roman",10,"bold"),background="#f7d065")
+    # cmb.pack(fill=X,pady=10,padx=10)
 
-    l5=Label(f6,text="List of stock group",font=hfont,bg="blue",fg="black")
+    l5=Label(f6,text="List of stock group",font=hfont,bg="#0851a8",fg="white")
     l5.pack(fill=X)
     global lb
-    lb=Listbox(f6,height=6,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)  
+    lb=Listbox(f6,height=15,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)  
     lb.bind('<<ListboxSelect>>',stock_group_select)
 
     lb.pack(padx=10,pady=10)
     for items in dt:
         lb.insert(END,items)
     c.close()
+    def db_search(e):
+        search=E1.get()
+        lb.delete(0,END)
+        conn = mysql.connector.connect(host ="localhost",
+                                            user = "root",
+                                            password ="",
+                                            db ="db")
+        c= conn.cursor()
+        c.execute('SELECT stock_group_name  FROM app_stock_groups WHERE stock_group_name LIKE "%{}%"'.format(search))
+        dt=c.fetchall()
+        if dt:
+            for items in dt:
+                lb.insert(END,items)
+            c.close()
+        else:
+            messagebox.showinfo("No data found","No data found")
     
-   
+    E1.bind("<KeyRelease>",db_search)
+
 def  Stock_Cate_Analy():
     
     global label_1
     label_1 = Label(Canvas1, text="Select stock category",borderwidth="0",width="40", background="#3385ff", foreground="#00254a",  font="-family {Segoe UI} -size 10 -weight bold ")                                                   
     label_1.place(relx=0, rely=0)
+    bk = Button(Canvas1, text="x", command=movement_analysis, activeforeground="black", activebackground="#3385ff",
+            fg='black', bg='#3385ff', borderwidth=0, font=('Arial 16 bold'),).place(x=1280, y=0,height=18)
+    
     movement_analysis_frame.destroy()
     f0.destroy()
     f1.destroy()
@@ -1596,13 +1640,12 @@ def  Stock_Cate_Analy():
     f5.pack(pady=15)
     f6=Frame(stock_category_frame,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
     f6.pack()
-    l11=Label(f5,text="Name of Category",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
-    l11.pack(padx=10,pady=10)
-    options_list=["Period","Stock Category Analysis","Stock Item Analysis"]
-    cmb=ttk.Combobox(f5 ,values=options_list,font=("times new roman",10,"bold"))
-    cmb.pack(fill=X,pady=10,padx=10)
-    itemsforlistbox=['primary','secondary']
-    l5=Label(f6,text="List of stock Category",font=hfont,bg="blue",fg="black")
+    l11=Label(f5,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
+    l11.pack()
+    E1 = Entry(f5,width=30,borderwidth="1",bg="#f7d065")
+    E1.pack(padx=10,pady=20)
+   
+    l5=Label(f6,text="List of stock Category",font=hfont,bg="#0851a8",fg="white")
     l5.pack(fill=X)
     global lb
     lb=Listbox(f6,height=6,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)
@@ -1619,6 +1662,25 @@ def  Stock_Cate_Analy():
     for items in dt:
         lb.insert(END,items)
     c.close()
+    def db_search(e):
+        search=E1.get()
+        lb.delete(0,END)
+        conn = mysql.connector.connect(host ="localhost",
+                                            user = "root",
+                                            password ="",
+                                            db ="db")
+        c= conn.cursor()
+        c.execute('SELECT stock_group_name  FROM app_stock_groups WHERE stock_group_name LIKE "%{}%"'.format(search))
+        dt=c.fetchall()
+        if dt:
+            for items in dt:
+                lb.insert(END,items)
+            c.close()
+        else:
+            messagebox.showinfo("No data found","No data found")
+    
+    E1.bind("<KeyRelease>",db_search)
+
 
 def stock_item_analy():
     global label_1
@@ -1718,12 +1780,17 @@ def group_analysis():
 
 def main():
     global f0
-    f0=Frame(Canvas2,bg="white",relief=RAISED,bd=5)
-    f0.pack(pady=10)
-    l5=Label(f0,text="statement of inv",font=hfont,bg="#3385ff",fg="black",)
-    l5.pack(fill="x")
-    bt1=Button(f0,text="Movement Analysis",font=hfont,bg="white",fg="black",command=movement_analysis)
-    bt1.pack(fill="x",padx=10,pady=10)
+    f0=Frame(Canvas2,bg="#a9ceeb",relief=GROOVE,bd=1)
+    f0.place(x=860,y=200,width=300,height=300)
+    # l5=Label(f0,text="statement of inv",font=hfont,bg="#3385ff",fg="black",)
+    # l5.pack(fill="x")
+    # bt1=Button(f0,text="Movement Analysis",font=hfont,bg="white",fg="black",command=movement_analysis)
+    # bt1.pack(fill="x",padx=10,pady=10)
+    menuname = Label(f0,text="Statements Of inv", fg='white', bg='#0851a8', borderwidth=2, font=(
+        'Arial 9 '), anchor='w').pack(fill=X)
+
+    b10 = Button(f0,text = "Movement Analysis",anchor="w",command=movement_analysis,activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).pack(fill=X,padx=10,pady=10)
+
 
 
 
