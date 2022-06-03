@@ -921,14 +921,7 @@ def Sundry_Debtors_group():
     f20.place(x=950,y=598,width=355,height=65)
     l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     l7f6.place(x=0,y=0,anchor="nw")
-def movement_val(e):
-    sdbtn.destroy()
-    # dtsel.destroy()
-    curItem = tree0.focus()
-    item_list=(tree0.item(curItem)['values'][0])
     
-    movement_values(item_list)
-
 
 def branch_edit():
     name = Label(top, text="Group Altration", fg='black', bg='#00c8ff', font=(
@@ -1128,6 +1121,86 @@ def list_of_Stock_items():
     'Arial 12'), anchor='w').place(x=1200, y=79)
     separator = ttk.Separator(top, orient='horizontal')
     separator.place(x=0, y=110, relheight=0, relwidth=0.845) 
+    
+
+def voucher_types():
+    name = Label(top, text="Chart Of Accounts", fg='black', bg='#00c8ff', font=(
+    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
+
+    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
+
+    name = Label(top, fg='#00c8ff', bg='#ffffff', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=0, y=73, width=1300, height=900)
+
+    b4 = Button(top, text="x", command=statics, activeforeground="black", activebackground="#00c8ff",
+            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
+
+    name = Label(top, bg='#ffffff',text="List Of Voucher Types", font=(
+    'Arial 12'), anchor='w').place(x=0, y=79)
+    name = Label(top, bg='#ffffff',text="For April-1", font=(
+    'Arial 12'), anchor='w').place(x=1200, y=79)
+    separator = ttk.Separator(top, orient='horizontal')
+    separator.place(x=0, y=110, relheight=0, relwidth=0.845) 
+    b1s = Button(top,text = "Attendance", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b1s.place(x=0,y=125,width=1300,height=18)
+    b2s = Button(top,text = "Contra", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b2s.place(x=0,y=145,width=1300,height=18)
+    b3s = Button(top,text = "Credit Note", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b3s.place(x=0,y=165,width=1300,height=18)
+    b4s = Button(top,text = "Debit Note", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b4s.place(x=0,y=185,width=1300,height=18)
+    b5s = Button(top,text = "Delivery Note", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b5s.place(x=0,y=205,width=1300,height=18)
+    b6s = Button(top,text = "Job Work In Order", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b6s.place(x=0,y=225,width=1300,height=18)
+    b7s = Button(top,text = "Job Work Out Order", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b7s.place(x=0,y=245,width=1300,height=18)
+    b8s = Button(top,text = "Journel", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b8s.place(x=0,y=265,width=1300,height=18)
+    b9s = Button(top,text = "Meterial In", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b9s.place(x=0,y=285,width=1300,height=18)
+    b10s = Button(top,text = "Meterial Out", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b10s.place(x=0,y=305,width=1300,height=18)
+    b11s = Button(top,text = "Memorandum", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b11s.place(x=0,y=325,width=1300,height=18)
+    b12s = Button(top,text = "Payment", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b12s.place(x=0,y=345,width=1300,height=18)
+    b13s = Button(top,text = "Payroll", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b13s.place(x=0,y=365,width=1300,height=18)
+    b14s = Button(top,text = "Physical Stock", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b14s.place(x=0,y=385,width=1300,height=18)
+    b15s = Button(top,text = "Purchase", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b15s.place(x=0,y=405,width=1300,height=18)
+    b16s = Button(top,text = "Purchase Order", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b16s.place(x=0,y=425,width=1300,height=18)
+    b17s = Button(top,text = "Reciept", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b17s.place(x=0,y=445,width=1300,height=18)
+    b18s = Button(top,text = "Reciept Note", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b18s.place(x=0,y=465,width=1300,height=18)
+    b19s = Button(top,text = "Rejections In", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b19s.place(x=0,y=485,width=1300,height=18)
+    b20s = Button(top,text = "Rejections Out", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b20s.place(x=0,y=505,width=1300,height=18)
+    b21s = Button(top,text = "reversing Journels", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b21s.place(x=0,y=525,width=1300,height=18)
+    b22s = Button(top,text = "Sales", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b22s.place(x=0,y=545,width=1300,height=18)
+    b23s = Button(top,text = "Sales Order", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b23s.place(x=0,y=565,width=1300,height=18)
+    b24s = Button(top,text = "Stock Journel", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
+    b24s.place(x=0,y=585,width=1300,height=18)
+    
+def movement_val(e):
+    sdbtn.destroy()
+    # dtsel.destroy()
+    curItem = tree0.focus()
+    item_list=(tree0.item(curItem)['values'][0])
+    
+    movement_values(item_list)
+
+
+
     
 
 def movement_values(item_list):
