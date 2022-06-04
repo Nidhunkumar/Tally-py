@@ -921,7 +921,349 @@ def Sundry_Debtors_group():
     f20.place(x=950,y=598,width=355,height=65)
     l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     l7f6.place(x=0,y=0,anchor="nw")
+def movement_val(e):
+    sdbtn.destroy()
+    # dtsel.destroy()
+    curItem = tree0.focus()
+    item_list=(tree0.item(curItem)['values'][0])
     
+    movement_values(item_list)
+
+
+
+    
+
+def movement_values(item_list):
+    
+        # tree0.insert("",'end',values=(i,qty,rate,value,total))
+        # supplier_name=i[1]
+        # qty=i[2]
+        # rate=i[3]
+        # value=i[4]
+        # total=i[5]
+        # date=i[6]
+        
+
+   
+
+
+    global sdbtn
+    sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
+    sdbtn.pack(fill=X,pady=10,padx=10)
+    
+    label_1=Label(Canvas1, text="Item movement analysis",borderwidth="0",width="40", background="#3385ff",
+                                    foreground="#00254a",   
+                                    font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+    global movement_frame
+    movement_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=1)
+    movement_frame.place(x=0,y=21,width=1308,height=680)
+
+    f11=Frame(movement_frame,bg="white",relief=RAISED,bd=1)
+    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
+    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",width=33,height=7)
+    l1f1.pack(fill=X)
+    f12=Frame(movement_frame,bg="white",relief=RAISED,bd=1)
+    f12.place(x=705,y=0,width=600,height=83)
+    l1f2=Label(f12,text=item_list,font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
+    l1f2.place(x=305,y=10,anchor="center")
+    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f3.place(x=305,y=30,anchor="center")
+    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
+    l1f4.place(x=305,y=50,anchor="center")
+
+    f13=Frame(movement_frame,bg="white",relief=RAISED,bd=2)
+    f13.place(x=0,y=142,width=1305,height=515)
+    f13bt1=Label(f13,text="Movement inward",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    f13bt1.place(x=0,y=0,anchor="nw")
+    f13bt2=Label(f13,text="Suppliers",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    f13bt2.place(x=10,y=30,anchor="nw")
+
+    f14=Frame(movement_frame,bg="white",relief=RAISED,bd=1)
+    f14.place(x=705,y=83,width=600,height=58)
+    l1f5=Label(f14,text="Movement values",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f5.place(x=0,y=0,anchor="nw")
+    l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f6.place(x=10,y=30,anchor="nw")
+    l1f7=Label(f14,text="Basic Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f7.place(x=160,y=30,anchor="nw")
+    l1f8=Label(f14,text="Effective rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f8.place(x=270,y=30,anchor="nw")
+    l1f9=Label(f14,text="Values",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
+    l1f9.place(x=400,y=30,anchor="nw")
+    global tree00
+    tree00=ttk.Treeview(f13, column=("c1", "c2","c3","c4","c5"), show='headings',height=3)
+
+    tree00.column("#1", anchor=tk.W,width=686)
+    
+    tree00.column("#2", anchor=tk.CENTER,width=120)
+
+    tree00.column("#3",anchor=tk.CENTER,width=140)
+
+    tree00.column("#4", anchor=tk.CENTER,width=140)
+
+    tree00.column("#5", anchor=tk.CENTER,width=212)
+
+    tree00.place(x=0,y=60)
+    qw=item_list
+    tree00.bind("<Double-1>",supplier)
+
+    conn=mysql.connector.connect(host="localhost",user="root",password="",database="db")
+    mycursor=conn.cursor()
+    mycursor.execute("select id from app_stock where stock_name='"+item_list+"'")
+    gid=mycursor.fetchone()[0]
+    mycursor.execute("select* from app_supplier where product_name_id='"+str(gid)+"'")
+    items=mycursor.fetchall()
+    for i in items:
+        tree00.insert("",'end',values=(i[1],i[2],i[3],i[4],i[5],i[6]))
+    mycursor.execute("select sum(product_quantity) from app_supplier where product_name_id='"+str(gid)+"'")
+    tqty=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_eff_rate) from app_supplier where product_name_id='"+str(gid)+"'")
+    trate=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_value) from app_supplier where product_name_id='"+str(gid)+"'")
+    tvalue=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_price) from app_supplier where product_name_id='"+str(gid)+"'")
+    tprice=mycursor.fetchone()[0]
+    tree00.insert("",'end',values=("Total",tqty,tprice,trate,tvalue))
+
+
+
+    conn.close()
+
+
+
+    
+
+
+    # l4f6=Label(f13,text=tqty,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f6.place(x=706,y=150,anchor="nw")
+    # l4f8=Label(f13,text=rate,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f8.place(x=860,y=150,anchor="nw")
+    # l4f7=Label(f13,text=value,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f7.place(x=990,y=150,anchor="nw")
+    # l4f8=Label(f13,text=total,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l4f8.place(x=1100,y=150,anchor="nw")
+
+    # horizontal =Frame(f13, bg='black', height=1,width=600)
+    # horizontal.place(x=705, y=175)
+
+
+    
+    f13bt4=Label(f13,text="Movement outwards",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    f13bt4.place(x=0,y=170,anchor="nw")
+    f13bt5=Label(f13,text="Buyers",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    f13bt5.place(x=10,y=200,anchor="nw")
+
+    tree1=ttk.Treeview(f13, column=("c1", "c2","c3","c4","c5"), show='headings',height=3)
+
+    tree1.column("#1", anchor=tk.W,width=686)
+
+    
+    tree1.column("#2", anchor=tk.CENTER,width=120)
+    tree1.column("#3",anchor=tk.CENTER,width=140)
+
+    tree1.column("#4", anchor=tk.CENTER,width=140)
+
+    tree1.column("#5", anchor=tk.CENTER,width=212)
+
+    tree1.place(x=0,y=230)
+    tree1.bind("<Double-1>",buyer)
+    conn=mysql.connector.connect(host="localhost",user="root",password="",database="db")
+    mycursor=conn.cursor()
+    mycursor.execute("select id from app_stock where stock_name='"+item_list+"'")
+    gid=mycursor.fetchone()[0]
+    mycursor.execute("select * from app_buyer where product_name_id='"+str(gid)+"'")
+    items=mycursor.fetchall()
+    for i in items:
+        tree1.insert("",'end',values=(i[1],i[2],i[3],i[4],i[5],i[6]))
+    mycursor.execute("select sum(product_quantity) from app_buyer where product_name_id='"+str(gid)+"'")
+    tqty=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_eff_rate) from app_buyer where product_name_id='"+str(gid)+"'")
+    trate=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_value) from app_buyer where product_name_id='"+str(gid)+"'")
+    tvalue=mycursor.fetchone()[0]
+    mycursor.execute("select sum(product_price) from app_buyer where product_name_id='"+str(gid)+"'")
+    tprice=mycursor.fetchone()[0]
+    tree1.insert("",'end',values=("Total",tqty,tprice,trate,tvalue))
+    mycursor.close()
+
+
+
+    # l46=Label(f13,text="10 Nos",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l46.place(x=706,y=330,anchor="nw")
+    # l48=Label(f13,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l48.place(x=860,y=330,anchor="nw")
+    # l47=Label(f13,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l47.place(x=990,y=330,anchor="nw")
+    # l48=Label(f13,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
+    # l48.place(x=1100,y=330,anchor="nw")
+
+    # horizontal =Frame(f13, bg='black', height=1,width=600)
+    # horizontal.place(x=705, y=355)
+    
+
+
+
+    
+# data = [
+# 	["John", "Elder", 1, "123 Elder St.", "Las Vegas", "NV", "89137"],
+# 	["Mary", "Smith", 2, "435 West Lookout", "Chicago", "IL", "60610"],
+# 	["Tim", "Tanaka", 3, "246 Main St.", "New York", "NY", "12345"],
+# 	["Erin", "Erinton", 4, "333 Top Way.", "Los Angeles", "CA", "90210"],
+# 	["Bob", "Bobberly", 5, "876 Left St.", "Memphis", "TN", "34321"],
+# 	["Steve", "Smith", 6, "1234 Main St.", "Miami", "FL", "12321"],
+# 	["Tina", "Browne", 7, "654 Street Ave.", "Chicago", "IL", "60611"],
+# 	["Mark", "Lane", 8, "12 East St.", "Nashville", "TN", "54345"],
+# 	["John", "Smith", 9, "678 North Ave.", "St. Louis", "MO", "67821"],
+# 	["Mary", "Todd", 10, "9 Elder Way.", "Dallas", "TX", "88948"],
+# 	["John", "Lincoln", 11, "123 Elder St.", "Las Vegas", "NV", "89137"],
+# 	["Mary", "Bush", 12, "435 West Lookout", "Chicago", "IL", "60610"],
+# 	["Tim", "Reagan", 13, "246 Main St.", "New York", "NY", "12345"],
+# 	["Erin", "Smith", 14, "333 Top Way.", "Los Angeles", "CA", "90210"],
+# 	["Bob", "Field", 15, "876 Left St.", "Memphis", "TN", "34321"],
+# 	["Steve", "Target", 16, "1234 Main St.", "Miami", "FL", "12321"],
+# 	["Tina", "Walton", 17, "654 Street Ave.", "Chicago", "IL", "60611"],
+# 	["Mark", "Erendale", 18, "12 East St.", "Nashville", "TN", "54345"],
+# 	["John", "Nowerton", 19, "678 North Ave.", "St. Louis", "MO", "67821"],
+# 	["Mary", "Hornblower", 20, "9 Elder Way.", "Dallas", "TX", "88948"]
+	
+# ]
+def supplier(e):
+    curItem = tree00.focus()
+    item_list=(tree00.item(curItem)['values'][0])
+    item_values(item_list)
+
+def buyer(e):
+   buyer_dtls()
+    
+
+def home():
+    name = Label(top, text="Statements Of Accounts", fg='black', bg='#00c8ff', font=(
+    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
+
+    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
+
+    name = Label(top, fg='#00c8ff', bg='#ffffff', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=0, y=73, width=1300, height=900)
+
+    menu = Label(top, fg='#00c8ff', bg='#a9ceeb', borderwidth=2, font=(
+        'Arial 9 underline'), anchor='w').place(x=863, y=300, width=232, height=150)
+
+    menuname = Label(top,text="Statements Of Accounts", fg='white', bg='#0851a8', borderwidth=2, font=(
+        'Arial 9 '), anchor='center').place(x=863, y=300, width=232, height=19)
+
+    b10 = Button(top,text = "Outstandings",activeforeground = "black",command=outstandings, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.390,width=232)
+    b11 = Button(top,text = "Statics",activeforeground = "black",command=statics, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.430,width=232)
+    b12 = Button(top,text = "Quit",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.470,width=232)
+
+
+
+def outstandings():
+    name = Label(top, text="Outstandings", fg='black', bg='#00c8ff', font=(
+    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
+
+    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
+
+    name = Label(top, fg='#00c8ff', bg='#ffffff', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=0, y=73, width=1300, height=900)
+    
+    b4 = Button(top, text="x", command=home, activeforeground="black", activebackground="#00c8ff",
+            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
+
+    menu = Label(top, fg='#00c8ff', bg='#a9ceeb', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=863, y=300, width=232, height=200)
+
+    menuname = Label(top,text="Outstandings", fg='white', bg='#0851a8', borderwidth=2, font=(
+    'Arial 9 '), anchor='center').place(x=863, y=300, width=232, height=19)
+
+    b13 = Button(top,text = "Receivables",activeforeground = "black", command=receivables, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.390, width=232)
+    b14 = Button(top,text = "Paybles",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.420, width=232)
+    b14 = Button(top,text = "Ledgers",activeforeground = "black", command=ledgers, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.460, width=232)
+    b14 = Button(top,text = "Group",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.490, width=232)
+    b15 = Button(top,text = "Quit",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.520, width=232)
+
+
+def receivables():
+
+    name = Label(top, text="Bills Receivables", fg='black', bg='#00c8ff', font=(
+    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
+
+    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
+
+    name = Label(top, fg='#00c8ff', bg='#ffffff', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=0, y=73, width=1300, height=900)
+    
+    b5 = Button(top, text="x", command=outstandings, activeforeground="black", activebackground="#00c8ff",
+            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
+
+    name = Label(top, bg='#ffffff',text="Group: All items", font=(
+    'Arial 12'), anchor='w').place(x=0, y=79)
+    name = Label(top, bg='#ffffff',text="For April-1", font=(
+    'Arial 12'), anchor='w').place(x=1200, y=79)        
+
+    t3 = ttk.Treeview(top)
+    t3['columns']=('Date','ref_id','Party_name','pending_amount','Due_on','overdue_days')
+    t3.column('#0', width=0, stretch=NO)
+    t3.column('Date', anchor=W, width=125,minwidth=125)
+    t3.column('ref_id', anchor=CENTER, width=125,minwidth=125)
+    t3.column('Party_name', anchor=W, width=665,minwidth=520)
+    t3.column('pending_amount', anchor=CENTER, width=125,minwidth=125)
+    t3.column('Due_on', anchor=CENTER, width=125,minwidth=125)
+    t3.column('overdue_days', anchor=CENTER, width=125,minwidth=125)
+   
+
+    t3.heading('#0', text='', anchor=CENTER)
+    t3.heading('Date', text='Date', anchor=W)
+    t3.heading('ref_id', text='ref id', anchor=CENTER)
+    t3.heading('Party_name', text='Party Name', anchor=W)
+    t3.heading('pending_amount', text='pending amount', anchor=CENTER)
+    t3.heading('Due_on', text='Due on', anchor=CENTER)
+    t3.heading('overdue_days', text='overduedays', anchor=CENTER)
+   
+    t3.insert(parent='', index=0, iid=0, text='', values=('1-apr-2021','3','Brothers enterprises','4904','1-apr-2021','0'))
+    t3.insert(parent='0', index=1, iid=1, text='', values=('','15 BTL','Himalaya body soap  200.00/BTL','','',''))
+    t3.insert(parent='0', index=2, iid=2, text='', values=('','15 BTL','Himalaya body soap  200.00/BTL','','',''))
+    t3.place(x=3, y=105, height=800)
+
+    name = Label(top, bg='#ffffff',text="Total", font=(
+    'Arial 9'), anchor='w').place(x=20, y=750)
+    name = Label(top, bg='#ffffff',text="4904", font=(
+    'Arial 9'), anchor='w').place(x=940, y=750)  
+
+def ledgers():
+    ledger = Label(top, text="Select Ledger", fg='black', bg='#00c8ff', font=(
+    'Arial 7 bold'), anchor='w').place(x=1, y=60, width=1219, height=13)
+    ledger = Label(top, text="", fg='#00c8ff', bg='white', font=(
+    'Arial 9 underline'), anchor='w').place(x=1, y=73, width=1298, height=604)
+    b4 = Button(top, text="x", command=outstandings, activeforeground="black", activebackground="#00c8ff",
+            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
+
+    Label1 = Label(top,text='Name of item',borderwidth="0", width=3, background="#faf8d7",
+                                     foreground="#00254a",
+                                     font="-family {Segoe UI} -size 10 -weight bold ",anchor="n",bd=2,)
+    Label1.place(relx=0.35, rely=0.09, relheight=0.10, relwidth=0.150)
+    Entry1 = Entry(top,width=8,borderwidth="3",bg="#f7d065")
+    Entry1.place(relx=0.36, rely=0.14, relheight=0.03, relwidth=0.132)
+
+
+    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
+
+    menu = Label(top, fg='#00c8ff', bg='#a9ceeb', borderwidth=2, font=(
+        'Arial 9 underline'), anchor='w').place(x=504, y=180, width=300, height=400)
+
+    menuname = Label(top,text="List Of Stock Items", fg='white', bg='#0851a8', borderwidth=2, font=(
+        'Arial 9 '), anchor='center').place(x=504, y=160, width=300, height=19)
+
+
+
+    b9 = Button(top,text = "Create",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.450, rely=0.220,relwidth=0.070,anchor="nw")
+    b10 = Button(top,text = "Pen",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10'),anchor="w").place(relx=0.350, rely=0.250,relwidth=.148)
+
+ 
 
 def branch_edit():
     name = Label(top, text="Group Altration", fg='black', bg='#00c8ff', font=(
@@ -1191,221 +1533,54 @@ def voucher_types():
     b24s = Button(top,text = "Stock Journel", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
     b24s.place(x=0,y=585,width=1300,height=18)
     
-def movement_val(e):
-    sdbtn.destroy()
-    # dtsel.destroy()
-    curItem = tree0.focus()
-    item_list=(tree0.item(curItem)['values'][0])
-    
-    movement_values(item_list)
+
+# NavBar Start
+name = Label(top, text="TallyPrime", fg='pink', bg='#3a646b', font=(
+    "Arial", 13), anchor='w').place(x=0, y=0, width=1600, height=60)
+name = Label(top, text="Gate WayOf Tally", fg='black', bg='#00c8ff', font=(
+    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
+name = Label(top, text="MANAGE", fg='#00c8ff', bg='#3a646b', font=(
+    'Arial 9 underline'), anchor='w').place(x=110, y=9, width=206, height=10)
+
+b1 = Button(top, text="K:Company", activeforeground="black", activebackground="white",
+            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=120, y=33)
+b2 = Button(top, text="Y:Data", activeforeground="black", activebackground="white",
+            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=275, y=33)
+b3 = Button(top, text="Z:Exchange", activeforeground="black", activebackground="white",
+            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=395, y=33)
+b4 = Button(top, text="  G:Go To  ", activeforeground="black", activebackground="white",
+            fg='black', bg='white', borderwidth=0, underline=2, font=('Arial 10 bold'),).place(x=565, y=33)
+b5 = Button(top, text="O:Import", activeforeground="black", activebackground="white",
+            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=825, y=33)
+b6 = Button(top, text="E:Export", activeforeground="black", activebackground="white",
+            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=925, y=33)
+b7 = Button(top, text="M:E-mail", activeforeground="black", activebackground="white",
+            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=1025, y=33)
+b8 = Button(top, text="P:Print", activeforeground="black", activebackground="white",
+            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=1127, y=33)
+b9 = Button(top, text="F1:Help", activeforeground="black", activebackground="white",
+            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=1227, y=33)
+
+# NavBar End
 
 
 
-    
+name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
 
-def movement_values(item_list):
-    
-        # tree0.insert("",'end',values=(i,qty,rate,value,total))
-        # supplier_name=i[1]
-        # qty=i[2]
-        # rate=i[3]
-        # value=i[4]
-        # total=i[5]
-        # date=i[6]
-        
+menu = Label(top, fg='#00c8ff', bg='#a9ceeb', borderwidth=2, font=(
+    'Arial 9 underline'), anchor='w').place(x=863, y=300, width=232, height=150)
 
-   
-
-
-    global sdbtn
-    sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",relief=RAISED,bd=1,command=movement_analysis_back)
-    sdbtn.pack(fill=X,pady=10,padx=10)
-    
-    label_1=Label(Canvas1, text="Item movement analysis",borderwidth="0",width="40", background="#3385ff",
-                                    foreground="#00254a",   
-                                    font="-family {Segoe UI} -size 10 -weight bold ")
-    label_1.place(relx=0, rely=0)
-    global movement_frame
-    movement_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=1)
-    movement_frame.place(x=0,y=21,width=1308,height=680)
-
-    f11=Frame(movement_frame,bg="white",relief=RAISED,bd=1)
-    f11.grid(row=1,column=0,columnspan=3,ipadx=200)
-    l1f1=Label(f11,text="Perticulars",font=("times new roman",12,"bold"),bg="white",fg="black",width=33,height=7)
-    l1f1.pack(fill=X)
-    f12=Frame(movement_frame,bg="white",relief=RAISED,bd=1)
-    f12.place(x=705,y=0,width=600,height=83)
-    l1f2=Label(f12,text=item_list,font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=5)
-    l1f2.place(x=305,y=10,anchor="center")
-    l1f3=Label(f12,text="C NAME",font=("times new roman",9,"bold"),bg="white",fg="black")
-    l1f3.place(x=305,y=30,anchor="center")
-    l1f4=Label(f12,text="FOR 1-APR-20",font=("times new roman",9,"bold"),bg="white",fg="black")
-    l1f4.place(x=305,y=50,anchor="center")
-
-    f13=Frame(movement_frame,bg="white",relief=RAISED,bd=2)
-    f13.place(x=0,y=142,width=1305,height=515)
-    f13bt1=Label(f13,text="Movement inward",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    f13bt1.place(x=0,y=0,anchor="nw")
-    f13bt2=Label(f13,text="Suppliers",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    f13bt2.place(x=10,y=30,anchor="nw")
-
-    f14=Frame(movement_frame,bg="white",relief=RAISED,bd=1)
-    f14.place(x=705,y=83,width=600,height=58)
-    l1f5=Label(f14,text="Movement values",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f5.place(x=0,y=0,anchor="nw")
-    l1f6=Label(f14,text="Quantity",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f6.place(x=10,y=30,anchor="nw")
-    l1f7=Label(f14,text="Basic Rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f7.place(x=160,y=30,anchor="nw")
-    l1f8=Label(f14,text="Effective rate",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f8.place(x=270,y=30,anchor="nw")
-    l1f9=Label(f14,text="Values",font=("times new roman",9,"bold"),bg="white",fg="black",borderwidth=0)
-    l1f9.place(x=400,y=30,anchor="nw")
-    global tree00
-    tree00=ttk.Treeview(f13, column=("c1", "c2","c3","c4","c5"), show='headings',height=3)
-
-    tree00.column("#1", anchor=tk.W,width=686)
-    
-    tree00.column("#2", anchor=tk.CENTER,width=120)
-
-    tree00.column("#3",anchor=tk.CENTER,width=140)
-
-    tree00.column("#4", anchor=tk.CENTER,width=140)
-
-    tree00.column("#5", anchor=tk.CENTER,width=212)
-
-    tree00.place(x=0,y=60)
-    qw=item_list
-    tree00.bind("<Double-1>",supplier)
-
-    conn=mysql.connector.connect(host="localhost",user="root",password="",database="db")
-    mycursor=conn.cursor()
-    mycursor.execute("select id from app_stock where stock_name='"+item_list+"'")
-    gid=mycursor.fetchone()[0]
-    mycursor.execute("select* from app_supplier where product_name_id='"+str(gid)+"'")
-    items=mycursor.fetchall()
-    for i in items:
-        tree00.insert("",'end',values=(i[1],i[2],i[3],i[4],i[5],i[6]))
-    mycursor.execute("select sum(product_quantity) from app_supplier where product_name_id='"+str(gid)+"'")
-    tqty=mycursor.fetchone()[0]
-    mycursor.execute("select sum(product_eff_rate) from app_supplier where product_name_id='"+str(gid)+"'")
-    trate=mycursor.fetchone()[0]
-    mycursor.execute("select sum(product_value) from app_supplier where product_name_id='"+str(gid)+"'")
-    tvalue=mycursor.fetchone()[0]
-    mycursor.execute("select sum(product_price) from app_supplier where product_name_id='"+str(gid)+"'")
-    tprice=mycursor.fetchone()[0]
-    tree00.insert("",'end',values=("Total",tqty,tprice,trate,tvalue))
+menuname = Label(top,text="Statements Of Accounts", fg='white', bg='#0851a8', borderwidth=2, font=(
+    'Arial 9 '), anchor='center').place(x=863, y=300, width=232, height=19)
 
 
 
-    conn.close()
 
+b10 = Button(top,text = "Outstandings",activeforeground = "black",command=outstandings, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.390,width=232)
+b11 = Button(top,text = "Statics",activeforeground = "black", command=statics, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.430,width=232)
+b12 = Button(top,text = "Quit",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.470,width=232)
 
-
-    
-
-
-    # l4f6=Label(f13,text=tqty,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    # l4f6.place(x=706,y=150,anchor="nw")
-    # l4f8=Label(f13,text=rate,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    # l4f8.place(x=860,y=150,anchor="nw")
-    # l4f7=Label(f13,text=value,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    # l4f7.place(x=990,y=150,anchor="nw")
-    # l4f8=Label(f13,text=total,font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    # l4f8.place(x=1100,y=150,anchor="nw")
-
-    # horizontal =Frame(f13, bg='black', height=1,width=600)
-    # horizontal.place(x=705, y=175)
-
-
-    
-    f13bt4=Label(f13,text="Movement outwards",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    f13bt4.place(x=0,y=170,anchor="nw")
-    f13bt5=Label(f13,text="Buyers",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    f13bt5.place(x=10,y=200,anchor="nw")
-
-    tree1=ttk.Treeview(f13, column=("c1", "c2","c3","c4","c5"), show='headings',height=3)
-
-    tree1.column("#1", anchor=tk.W,width=686)
-
-    
-    tree1.column("#2", anchor=tk.CENTER,width=120)
-    tree1.column("#3",anchor=tk.CENTER,width=140)
-
-    tree1.column("#4", anchor=tk.CENTER,width=140)
-
-    tree1.column("#5", anchor=tk.CENTER,width=212)
-
-    tree1.place(x=0,y=230)
-    tree1.bind("<Double-1>",buyer)
-    conn=mysql.connector.connect(host="localhost",user="root",password="",database="db")
-    mycursor=conn.cursor()
-    mycursor.execute("select id from app_stock where stock_name='"+item_list+"'")
-    gid=mycursor.fetchone()[0]
-    mycursor.execute("select * from app_buyer where product_name_id='"+str(gid)+"'")
-    items=mycursor.fetchall()
-    for i in items:
-        tree1.insert("",'end',values=(i[1],i[2],i[3],i[4],i[5],i[6]))
-    mycursor.execute("select sum(product_quantity) from app_buyer where product_name_id='"+str(gid)+"'")
-    tqty=mycursor.fetchone()[0]
-    mycursor.execute("select sum(product_eff_rate) from app_buyer where product_name_id='"+str(gid)+"'")
-    trate=mycursor.fetchone()[0]
-    mycursor.execute("select sum(product_value) from app_buyer where product_name_id='"+str(gid)+"'")
-    tvalue=mycursor.fetchone()[0]
-    mycursor.execute("select sum(product_price) from app_buyer where product_name_id='"+str(gid)+"'")
-    tprice=mycursor.fetchone()[0]
-    tree1.insert("",'end',values=("Total",tqty,tprice,trate,tvalue))
-    mycursor.close()
-
-
-
-    # l46=Label(f13,text="10 Nos",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    # l46.place(x=706,y=330,anchor="nw")
-    # l48=Label(f13,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    # l48.place(x=860,y=330,anchor="nw")
-    # l47=Label(f13,text="10",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    # l47.place(x=990,y=330,anchor="nw")
-    # l48=Label(f13,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
-    # l48.place(x=1100,y=330,anchor="nw")
-
-    # horizontal =Frame(f13, bg='black', height=1,width=600)
-    # horizontal.place(x=705, y=355)
-    
-
-
-
-    
-# data = [
-# 	["John", "Elder", 1, "123 Elder St.", "Las Vegas", "NV", "89137"],
-# 	["Mary", "Smith", 2, "435 West Lookout", "Chicago", "IL", "60610"],
-# 	["Tim", "Tanaka", 3, "246 Main St.", "New York", "NY", "12345"],
-# 	["Erin", "Erinton", 4, "333 Top Way.", "Los Angeles", "CA", "90210"],
-# 	["Bob", "Bobberly", 5, "876 Left St.", "Memphis", "TN", "34321"],
-# 	["Steve", "Smith", 6, "1234 Main St.", "Miami", "FL", "12321"],
-# 	["Tina", "Browne", 7, "654 Street Ave.", "Chicago", "IL", "60611"],
-# 	["Mark", "Lane", 8, "12 East St.", "Nashville", "TN", "54345"],
-# 	["John", "Smith", 9, "678 North Ave.", "St. Louis", "MO", "67821"],
-# 	["Mary", "Todd", 10, "9 Elder Way.", "Dallas", "TX", "88948"],
-# 	["John", "Lincoln", 11, "123 Elder St.", "Las Vegas", "NV", "89137"],
-# 	["Mary", "Bush", 12, "435 West Lookout", "Chicago", "IL", "60610"],
-# 	["Tim", "Reagan", 13, "246 Main St.", "New York", "NY", "12345"],
-# 	["Erin", "Smith", 14, "333 Top Way.", "Los Angeles", "CA", "90210"],
-# 	["Bob", "Field", 15, "876 Left St.", "Memphis", "TN", "34321"],
-# 	["Steve", "Target", 16, "1234 Main St.", "Miami", "FL", "12321"],
-# 	["Tina", "Walton", 17, "654 Street Ave.", "Chicago", "IL", "60611"],
-# 	["Mark", "Erendale", 18, "12 East St.", "Nashville", "TN", "54345"],
-# 	["John", "Nowerton", 19, "678 North Ave.", "St. Louis", "MO", "67821"],
-# 	["Mary", "Hornblower", 20, "9 Elder Way.", "Dallas", "TX", "88948"]
-	
-# ]
-def supplier(e):
-    curItem = tree00.focus()
-    item_list=(tree00.item(curItem)['values'][0])
-    item_values(item_list)
-
-def buyer(e):
-   buyer_dtls()
-    
 
 def buyer_dtls():
     label_1=Label(Canvas1, text="Accounting voucher alteration secondry",width="40",borderwidth="0", background="#3385ff",
