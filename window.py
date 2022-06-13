@@ -158,6 +158,675 @@ def movement_analysis():
     lb.pack(padx=10,pady=10)
     for items in itemsforlistbox:
         lb.insert(END,items)
+def random_bill_number(stringLength):
+    lettersAndDigits = string.ascii_letters.upper() + string.digits
+    strr=''.join(random.choice(lettersAndDigits) for i in range(stringLength-2))
+    return ('BB'+strr)
+
+
+def valid_phone(phn):
+    if re.match(r"[789]\d{9}$", phn):
+        return True
+    return False
+
+def login(Event=None):
+    global username
+    username = user.get()
+    password = passwd.get()
+
+    with sqlite3.connect("./Database/store.db") as db:
+        cur = db.cursor()
+    find_user = "SELECT * FROM employee WHERE emp_id = ? and password = ?"
+    cur.execute(find_user, [username, password])
+    results = cur.fetchall()
+    if results:
+        messagebox.showinfo("Login Page", "The login is successful")
+        page1.entry1.delete(0, END)
+        page1.entry2.delete(0, END)
+        root.withdraw()
+        global biller
+        global page2
+        biller = Toplevel()
+        page2 = bill_window(biller)
+        page2.time()
+        biller.protocol("WM_DELETE_WINDOW", exitt)
+        biller.mainloop()
+
+    else:
+        messagebox.showerror("Error", "Incorrect username or password.")
+        page1.entry2.delete(0, END)
+
+
+
+def logout():
+    sure = messagebox.askyesno("Logout", "Are you sure you want to logout?", parent=biller)
+    if sure == True:
+        biller.destroy()
+        root.deiconify()
+        page1.entry1.delete(0, END)
+        page1.entry2.delete(0, END)
+
+class login_page:
+    def __init__(self, top=None):
+        top.geometry("1366x768")
+        top.resizable(0, 0)
+        top.title("Retail Manager")
+
+        self.label1 = Label(root)
+        self.label1.place(relx=0, rely=0, width=1366, height=768)
+        self.img = PhotoImage(file="./images/employee_login.png")
+        self.label1.configure(image=self.img)
+
+        self.entry1 = Entry(root)
+        self.entry1.place(relx=0.373, rely=0.273, width=374, height=24)
+        self.entry1.configure(font="-family {Poppins} -size 10")
+        self.entry1.configure(relief="flat")
+        self.entry1.configure(textvariable=user)
+
+        self.entry2 = Entry(root)
+        self.entry2.place(relx=0.373, rely=0.384, width=374, height=24)
+        self.entry2.configure(font="-family {Poppins} -size 10")
+        self.entry2.configure(relief="flat")
+        self.entry2.configure(show="*")
+        self.entry2.configure(textvariable=passwd)
+
+        self.button1 = Button(root)
+        self.button1.place(relx=0.366, rely=0.685, width=356, height=43)
+        self.button1.configure(relief="flat")
+        self.button1.configure(overrelief="flat")
+        self.button1.configure(activebackground="#D2463E")
+        self.button1.configure(cursor="hand2")
+        self.button1.configure(foreground="#ffffff")
+        self.button1.configure(background="#D2463E")
+        self.button1.configure(font="-family {Poppins SemiBold} -size 20")
+        self.button1.configure(borderwidth="0")
+        self.button1.configure(text="""LOGIN""")
+        self.button1.configure(command=login)
+
+
+class Item:
+    def __init__(self, name, price, qty):
+        self.product_name = name
+        self.price = price
+        self.qty = qty
+
+class Cart:
+    def __init__(self):
+        self.items = []
+        self.dictionary = {}
+
+    def add_item(self, item):
+        self.items.append(item)
+
+    def remove_item(self):
+        self.items.pop()
+
+    def remove_items(self):
+        self.items.clear()
+
+    def total(self):
+        total = 0.0
+        for i in self.items:
+            total += i.price * i.qty
+        return total
+
+    def isEmpty(self):
+        if len(self.items)==0:
+            return True
+        
+    def allCart(self):
+        for i in self.items:
+            if (i.product_name in self.dictionary):
+                self.dictionary[i.product_name] += i.qty
+            else:
+                self.dictionary.update({i.product_name:i.qty})
+    
+
+def exitt():
+    sure = messagebox.askyesno("Exit","Are you sure you want to exit?", parent=biller)
+    if sure == True:
+        biller.destroy()
+        root.destroy()
+
+
+class bill_window:
+    def __init__(self, top=None):
+        top.geometry("1366x768")
+        top.resizable(0, 0)
+        top.title("Billing System")
+
+        self.label = Label(biller)
+        self.label.place(relx=0, rely=0, width=1366, height=768)
+        self.img = PhotoImage(file="./images/bill_window.png")
+        self.label.configure(image=self.img)
+
+        self.message = Label(biller)
+        self.message.place(relx=0.038, rely=0.055, width=136, height=30)
+        self.message.configure(font="-family {Poppins} -size 10")
+        self.message.configure(foreground="#000000")
+        self.message.configure(background="#ffffff")
+        self.message.configure(text=username)
+        self.message.configure(anchor="w")
+
+        self.clock = Label(biller)
+        self.clock.place(relx=0.9, rely=0.065, width=102, height=36)
+        self.clock.configure(font="-family {Poppins Light} -size 12")
+        self.clock.configure(foreground="#000000")
+        self.clock.configure(background="#ffffff")
+
+        self.entry1 = Entry(biller)
+        self.entry1.place(relx=0.509, rely=0.23, width=240, height=24)
+        self.entry1.configure(font="-family {Poppins} -size 12")
+        self.entry1.configure(relief="flat")
+        self.entry1.configure(textvariable=cust_name)
+
+        self.entry2 = Entry(biller)
+        self.entry2.place(relx=0.791, rely=0.23, width=240, height=24)
+        self.entry2.configure(font="-family {Poppins} -size 12")
+        self.entry2.configure(relief="flat")
+        self.entry2.configure(textvariable=cust_num)
+
+        self.entry3 = Entry(biller)
+        self.entry3.place(relx=0.102, rely=0.23, width=240, height=24)
+        self.entry3.configure(font="-family {Poppins} -size 12")
+        self.entry3.configure(relief="flat")
+        self.entry3.configure(textvariable=cust_search_bill)
+
+        self.button1 = Button(biller)
+        self.button1.place(relx=0.031, rely=0.104, width=76, height=23)
+        self.button1.configure(relief="flat")
+        self.button1.configure(overrelief="flat")
+        self.button1.configure(activebackground="#CF1E14")
+        self.button1.configure(cursor="hand2")
+        self.button1.configure(foreground="#ffffff")
+        self.button1.configure(background="#CF1E14")
+        self.button1.configure(font="-family {Poppins SemiBold} -size 12")
+        self.button1.configure(borderwidth="0")
+        self.button1.configure(text="""Logout""")
+        self.button1.configure(command=logout)
+
+        self.button2 = Button(biller)
+        self.button2.place(relx=0.315, rely=0.234, width=76, height=23)
+        self.button2.configure(relief="flat")
+        self.button2.configure(overrelief="flat")
+        self.button2.configure(activebackground="#CF1E14")
+        self.button2.configure(cursor="hand2")
+        self.button2.configure(foreground="#ffffff")
+        self.button2.configure(background="#CF1E14")
+        self.button2.configure(font="-family {Poppins SemiBold} -size 12")
+        self.button2.configure(borderwidth="0")
+        self.button2.configure(text="""Search""")
+        self.button2.configure(command=self.search_bill)
+
+        self.button3 = Button(biller)
+        self.button3.place(relx=0.048, rely=0.885, width=86, height=25)
+        self.button3.configure(relief="flat")
+        self.button3.configure(overrelief="flat")
+        self.button3.configure(activebackground="#CF1E14")
+        self.button3.configure(cursor="hand2")
+        self.button3.configure(foreground="#ffffff")
+        self.button3.configure(background="#CF1E14")
+        self.button3.configure(font="-family {Poppins SemiBold} -size 10")
+        self.button3.configure(borderwidth="0")
+        self.button3.configure(text="""Total""")
+        self.button3.configure(command=self.total_bill)
+
+        self.button4 = Button(biller)
+        self.button4.place(relx=0.141, rely=0.885, width=84, height=25)
+        self.button4.configure(relief="flat")
+        self.button4.configure(overrelief="flat")
+        self.button4.configure(activebackground="#CF1E14")
+        self.button4.configure(cursor="hand2")
+        self.button4.configure(foreground="#ffffff")
+        self.button4.configure(background="#CF1E14")
+        self.button4.configure(font="-family {Poppins SemiBold} -size 10")
+        self.button4.configure(borderwidth="0")
+        self.button4.configure(text="""Generate""")
+        self.button4.configure(command=self.gen_bill)
+
+        self.button5 = Button(biller)
+        self.button5.place(relx=0.230, rely=0.885, width=86, height=25)
+        self.button5.configure(relief="flat")
+        self.button5.configure(overrelief="flat")
+        self.button5.configure(activebackground="#CF1E14")
+        self.button5.configure(cursor="hand2")
+        self.button5.configure(foreground="#ffffff")
+        self.button5.configure(background="#CF1E14")
+        self.button5.configure(font="-family {Poppins SemiBold} -size 10")
+        self.button5.configure(borderwidth="0")
+        self.button5.configure(text="""Clear""")
+        self.button5.configure(command=self.clear_bill)
+
+        self.button6 = Button(biller)
+        self.button6.place(relx=0.322, rely=0.885, width=86, height=25)
+        self.button6.configure(relief="flat")
+        self.button6.configure(overrelief="flat")
+        self.button6.configure(activebackground="#CF1E14")
+        self.button6.configure(cursor="hand2")
+        self.button6.configure(foreground="#ffffff")
+        self.button6.configure(background="#CF1E14")
+        self.button6.configure(font="-family {Poppins SemiBold} -size 10")
+        self.button6.configure(borderwidth="0")
+        self.button6.configure(text="""Exit""")
+        self.button6.configure(command=exitt)
+
+        self.button7 = Button(biller)
+        self.button7.place(relx=0.098, rely=0.734, width=86, height=26)
+        self.button7.configure(relief="flat")
+        self.button7.configure(overrelief="flat")
+        self.button7.configure(activebackground="#CF1E14")
+        self.button7.configure(cursor="hand2")
+        self.button7.configure(foreground="#ffffff")
+        self.button7.configure(background="#CF1E14")
+        self.button7.configure(font="-family {Poppins SemiBold} -size 10")
+        self.button7.configure(borderwidth="0")
+        self.button7.configure(text="""Add To Cart""")
+        self.button7.configure(command=self.add_to_cart)
+
+        self.button8 = Button(biller)
+        self.button8.place(relx=0.274, rely=0.734, width=84, height=26)
+        self.button8.configure(relief="flat")
+        self.button8.configure(overrelief="flat")
+        self.button8.configure(activebackground="#CF1E14")
+        self.button8.configure(cursor="hand2")
+        self.button8.configure(foreground="#ffffff")
+        self.button8.configure(background="#CF1E14")
+        self.button8.configure(font="-family {Poppins SemiBold} -size 10")
+        self.button8.configure(borderwidth="0")
+        self.button8.configure(text="""Clear""")
+        self.button8.configure(command=self.clear_selection)
+
+        self.button9 = Button(biller)
+        self.button9.place(relx=0.194, rely=0.734, width=68, height=26)
+        self.button9.configure(relief="flat")
+        self.button9.configure(overrelief="flat")
+        self.button9.configure(activebackground="#CF1E14")
+        self.button9.configure(cursor="hand2")
+        self.button9.configure(foreground="#ffffff")
+        self.button9.configure(background="#CF1E14")
+        self.button9.configure(font="-family {Poppins SemiBold} -size 10")
+        self.button9.configure(borderwidth="0")
+        self.button9.configure(text="""Remove""")
+        self.button9.configure(command=self.remove_product)
+
+        text_font = ("Poppins", "8")
+        self.combo1 = ttk.Combobox(biller)
+        self.combo1.place(relx=0.035, rely=0.408, width=477, height=26)
+
+        find_category = "SELECT product_cat FROM raw_inventory"
+        cur.execute(find_category)
+        result1 = cur.fetchall()
+        cat = []
+        for i in range(len(result1)):
+            if(result1[i][0] not in cat):
+                cat.append(result1[i][0])
+
+
+        self.combo1.configure(values=cat)
+        self.combo1.configure(state="readonly")
+        self.combo1.configure(font="-family {Poppins} -size 8")
+        self.combo1.option_add("*TCombobox*Listbox.font", text_font)
+        self.combo1.option_add("*TCombobox*Listbox.selectBackground", "#D2463E")
+
+
+        self.combo2 = ttk.Combobox(biller)
+        self.combo2.place(relx=0.035, rely=0.479, width=477, height=26)
+        self.combo2.configure(font="-family {Poppins} -size 8")
+        self.combo2.option_add("*TCombobox*Listbox.font", text_font) 
+        self.combo2.configure(state="disabled")
+
+
+        self.combo3 = ttk.Combobox(biller)
+        self.combo3.place(relx=0.035, rely=0.551, width=477, height=26)
+        self.combo3.configure(state="disabled")
+        self.combo3.configure(font="-family {Poppins} -size 8")
+        self.combo3.option_add("*TCombobox*Listbox.font", text_font)
+
+        self.entry4 = ttk.Entry(biller)
+        self.entry4.place(relx=0.035, rely=0.629, width=477, height=26)
+        self.entry4.configure(font="-family {Poppins} -size 8")
+        self.entry4.configure(foreground="#000000")
+        self.entry4.configure(state="disabled")
+
+        self.Scrolledtext1 = tkst.ScrolledText(top)
+        self.Scrolledtext1.place(relx=0.439, rely=0.586, width=695, height=275)
+        self.Scrolledtext1.configure(borderwidth=0)
+        self.Scrolledtext1.configure(font="-family {Podkova} -size 8")
+        self.Scrolledtext1.configure(state="disabled")
+
+        self.combo1.bind("<<ComboboxSelected>>", self.get_category)
+        
+    def get_category(self, Event):
+        self.combo2.configure(state="readonly")
+        self.combo2.set('')
+        self.combo3.set('')
+        find_subcat = "SELECT product_subcat FROM raw_inventory WHERE product_cat = ?"
+        cur.execute(find_subcat, [self.combo1.get()])
+        result2 = cur.fetchall()
+        subcat = []
+        for j in range(len(result2)):
+            if(result2[j][0] not in subcat):
+                subcat.append(result2[j][0])
+        
+        self.combo2.configure(values=subcat)
+        self.combo2.bind("<<ComboboxSelected>>", self.get_subcat)
+        self.combo3.configure(state="disabled")
+
+    def get_subcat(self, Event):
+        self.combo3.configure(state="readonly")
+        self.combo3.set('')
+        find_product = "SELECT product_name FROM raw_inventory WHERE product_cat = ? and product_subcat = ?"
+        cur.execute(find_product, [self.combo1.get(), self.combo2.get()])
+        result3 = cur.fetchall()
+        pro = []
+        for k in range(len(result3)):
+            pro.append(result3[k][0])
+
+        self.combo3.configure(values=pro)
+        self.combo3.bind("<<ComboboxSelected>>", self.show_qty)
+        self.entry4.configure(state="disabled")
+
+    def show_qty(self, Event):
+        self.entry4.configure(state="normal")
+        self.qty_label = Label(biller)
+        self.qty_label.place(relx=0.033, rely=0.664, width=82, height=26)
+        self.qty_label.configure(font="-family {Poppins} -size 8")
+        self.qty_label.configure(anchor="w")
+
+        product_name = self.combo3.get()
+        find_qty = "SELECT stock FROM raw_inventory WHERE product_name = ?"
+        cur.execute(find_qty, [product_name])
+        results = cur.fetchone()
+        self.qty_label.configure(text="In Stock: {}".format(results[0]))
+        self.qty_label.configure(background="#ffffff")
+        self.qty_label.configure(foreground="#333333")
+    
+    cart = Cart()
+    def add_to_cart(self):
+        self.Scrolledtext1.configure(state="normal")
+        strr = self.Scrolledtext1.get('1.0', END)
+        if strr.find('Total')==-1:
+            product_name = self.combo3.get()
+            if(product_name!=""):
+                product_qty = self.entry4.get()
+                find_mrp = "SELECT mrp, stock FROM raw_inventory WHERE product_name = ?"
+                cur.execute(find_mrp, [product_name])
+                results = cur.fetchall()
+                stock = results[0][1]
+                mrp = results[0][0]
+                if product_qty.isdigit()==True:
+                    if (stock-int(product_qty))>=0:
+                        sp = mrp*int(product_qty)
+                        item = Item(product_name, mrp, int(product_qty))
+                        self.cart.add_item(item)
+                        self.Scrolledtext1.configure(state="normal")
+                        bill_text = "{}\t\t\t\t\t\t{}\t\t\t\t\t   {}\n".format(product_name, product_qty, sp)
+                        self.Scrolledtext1.insert('insert', bill_text)
+                        self.Scrolledtext1.configure(state="disabled")
+                    else:
+                        messagebox.showerror("Oops!", "Out of stock. Check quantity.", parent=biller)
+                else:
+                    messagebox.showerror("Oops!", "Invalid quantity.", parent=biller)
+            else:
+                messagebox.showerror("Oops!", "Choose a product.", parent=biller)
+        else:
+            self.Scrolledtext1.delete('1.0', END)
+            new_li = []
+            li = strr.split("\n")
+            for i in range(len(li)):
+                if len(li[i])!=0:
+                    if li[i].find('Total')==-1:
+                        new_li.append(li[i])
+                    else:
+                        break
+            for j in range(len(new_li)-1):
+                self.Scrolledtext1.insert('insert', new_li[j])
+                self.Scrolledtext1.insert('insert','\n')
+            product_name = self.combo3.get()
+            if(product_name!=""):
+                product_qty = self.entry4.get()
+                find_mrp = "SELECT mrp, stock, product_id FROM raw_inventory WHERE product_name = ?"
+                cur.execute(find_mrp, [product_name])
+                results = cur.fetchall()
+                stock = results[0][1]
+                mrp = results[0][0]
+                if product_qty.isdigit()==True:
+                    if (stock-int(product_qty))>=0:
+                        sp = results[0][0]*int(product_qty)
+                        item = Item(product_name, mrp, int(product_qty))
+                        self.cart.add_item(item)
+                        self.Scrolledtext1.configure(state="normal")
+                        bill_text = "{}\t\t\t\t\t\t{}\t\t\t\t\t   {}\n".format(product_name, product_qty, sp)
+                        self.Scrolledtext1.insert('insert', bill_text)
+                        self.Scrolledtext1.configure(state="disabled")
+                    else:
+                        messagebox.showerror("Oops!", "Out of stock. Check quantity.", parent=biller)
+                else:
+                    messagebox.showerror("Oops!", "Invalid quantity.", parent=biller)
+            else:
+                messagebox.showerror("Oops!", "Choose a product.", parent=biller)
+
+    def remove_product(self):
+        if(self.cart.isEmpty()!=True):
+            self.Scrolledtext1.configure(state="normal")
+            strr = self.Scrolledtext1.get('1.0', END)
+            if strr.find('Total')==-1:
+                try:
+                    self.cart.remove_item()
+                except IndexError:
+                    messagebox.showerror("Oops!", "Cart is empty", parent=biller)
+                else:
+                    self.Scrolledtext1.configure(state="normal")
+                    get_all_bill = (self.Scrolledtext1.get('1.0', END).split("\n"))
+                    new_string = get_all_bill[:len(get_all_bill)-3]
+                    self.Scrolledtext1.delete('1.0', END)
+                    for i in range(len(new_string)):
+                        self.Scrolledtext1.insert('insert', new_string[i])
+                        self.Scrolledtext1.insert('insert','\n')
+                    
+                    self.Scrolledtext1.configure(state="disabled")
+            else:
+                try:
+                    self.cart.remove_item()
+                except IndexError:
+                    messagebox.showerror("Oops!", "Cart is empty", parent=biller)
+                else:
+                    self.Scrolledtext1.delete('1.0', END)
+                    new_li = []
+                    li = strr.split("\n")
+                    for i in range(len(li)):
+                        if len(li[i])!=0:
+                            if li[i].find('Total')==-1:
+                                new_li.append(li[i])
+                            else:
+                                break
+                    new_li.pop()
+                    for j in range(len(new_li)-1):
+                        self.Scrolledtext1.insert('insert', new_li[j])
+                        self.Scrolledtext1.insert('insert','\n')
+                    self.Scrolledtext1.configure(state="disabled")
+
+        else:
+            messagebox.showerror("Oops!", "Add a product.", parent=biller)
+
+    def wel_bill(self):
+        self.name_message = Text(biller)
+        self.name_message.place(relx=0.514, rely=0.452, width=176, height=30)
+        self.name_message.configure(font="-family {Podkova} -size 10")
+        self.name_message.configure(borderwidth=0)
+        self.name_message.configure(background="#ffffff")
+
+        self.num_message = Text(biller)
+        self.num_message.place(relx=0.894, rely=0.452, width=90, height=30)
+        self.num_message.configure(font="-family {Podkova} -size 10")
+        self.num_message.configure(borderwidth=0)
+        self.num_message.configure(background="#ffffff")
+
+        self.bill_message = Text(biller)
+        self.bill_message.place(relx=0.499, rely=0.477, width=176, height=26)
+        self.bill_message.configure(font="-family {Podkova} -size 10")
+        self.bill_message.configure(borderwidth=0)
+        self.bill_message.configure(background="#ffffff")
+
+        self.bill_date_message = Text(biller)
+        self.bill_date_message.place(relx=0.852, rely=0.477, width=90, height=26)
+        self.bill_date_message.configure(font="-family {Podkova} -size 10")
+        self.bill_date_message.configure(borderwidth=0)
+        self.bill_date_message.configure(background="#ffffff")
+    
+    def total_bill(self):
+        if self.cart.isEmpty():
+            messagebox.showerror("Oops!", "Add a product.", parent=biller)
+        else:
+            self.Scrolledtext1.configure(state="normal")
+            strr = self.Scrolledtext1.get('1.0', END)
+            if strr.find('Total')==-1:
+                self.Scrolledtext1.configure(state="normal")
+                divider = "\n\n\n"+("─"*61)
+                self.Scrolledtext1.insert('insert', divider)
+                total = "\nTotal\t\t\t\t\t\t\t\t\t\t\tRs. {}".format(self.cart.total())
+                self.Scrolledtext1.insert('insert', total)
+                divider2 = "\n"+("─"*61)
+                self.Scrolledtext1.insert('insert', divider2)
+                self.Scrolledtext1.configure(state="disabled")
+            else:
+                return
+
+    state = 1
+    def gen_bill(self):
+
+        if self.state == 1:
+            strr = self.Scrolledtext1.get('1.0', END)
+            self.wel_bill()
+            if(cust_name.get()==""):
+                messagebox.showerror("Oops!", "Please enter a name.", parent=biller)
+            elif(cust_num.get()==""):
+                messagebox.showerror("Oops!", "Please enter a number.", parent=biller)
+            elif valid_phone(cust_num.get())==False:
+                messagebox.showerror("Oops!", "Please enter a valid number.", parent=biller)
+            elif(self.cart.isEmpty()):
+                messagebox.showerror("Oops!", "Cart is empty.", parent=biller)
+            else: 
+                if strr.find('Total')==-1:
+                    self.total_bill()
+                    self.gen_bill()
+                else:
+                    self.name_message.insert(END, cust_name.get())
+                    self.name_message.configure(state="disabled")
+            
+                    self.num_message.insert(END, cust_num.get())
+                    self.num_message.configure(state="disabled")
+            
+                    cust_new_bill.set(random_bill_number(8))
+
+                    self.bill_message.insert(END, cust_new_bill.get())
+                    self.bill_message.configure(state="disabled")
+                
+                    bill_date.set(str(date.today()))
+
+                    self.bill_date_message.insert(END, bill_date.get())
+                    self.bill_date_message.configure(state="disabled")
+
+                    
+
+                    with sqlite3.connect("./Database/store.db") as db:
+                        cur = db.cursor()
+                    insert = (
+                        "INSERT INTO bill(bill_no, date, customer_name, customer_no, bill_details) VALUES(?,?,?,?,?)"
+                    )
+                    cur.execute(insert, [cust_new_bill.get(), bill_date.get(), cust_name.get(), cust_num.get(), self.Scrolledtext1.get('1.0', END)])
+                    db.commit()
+                    #print(self.cart.items)
+                    print(self.cart.allCart())
+                    for name, qty in self.cart.dictionary.items():
+                        update_qty = "UPDATE raw_inventory SET stock = stock - ? WHERE product_name = ?"
+                        cur.execute(update_qty, [qty, name])
+                        db.commit()
+                    messagebox.showinfo("Success!!", "Bill Generated", parent=biller)
+                    self.entry1.configure(state="disabled", disabledbackground="#ffffff", disabledforeground="#000000")
+                    self.entry2.configure(state="disabled", disabledbackground="#ffffff", disabledforeground="#000000")
+                    self.state = 0
+        else:
+            return
+                    
+    def clear_bill(self):
+        self.wel_bill()
+        self.entry1.configure(state="normal")
+        self.entry2.configure(state="normal")
+        self.entry1.delete(0, END)
+        self.entry2.delete(0, END)
+        self.entry3.delete(0, END)
+        self.name_message.configure(state="normal")
+        self.num_message.configure(state="normal")
+        self.bill_message.configure(state="normal")
+        self.bill_date_message.configure(state="normal")
+        self.Scrolledtext1.configure(state="normal")
+        self.name_message.delete(1.0, END)
+        self.num_message.delete(1.0, END)
+        self.bill_message.delete(1.0, END)
+        self.bill_date_message.delete(1.0, END)
+        self.Scrolledtext1.delete(1.0, END)
+        self.name_message.configure(state="disabled")
+        self.num_message.configure(state="disabled")
+        self.bill_message.configure(state="disabled")
+        self.bill_date_message.configure(state="disabled")
+        self.Scrolledtext1.configure(state="disabled")
+        self.cart.remove_items()
+        self.state = 1
+
+    def clear_selection(self):
+        self.entry4.delete(0, END)
+        self.combo1.configure(state="normal")
+        self.combo2.configure(state="normal")
+        self.combo3.configure(state="normal")
+        self.combo1.delete(0, END)
+        self.combo2.delete(0, END)
+        self.combo3.delete(0, END)
+        self.combo2.configure(state="disabled")
+        self.combo3.configure(state="disabled")
+        self.entry4.configure(state="disabled")
+        try:
+            self.qty_label.configure(foreground="#ffffff")
+        except AttributeError:
+            pass
+             
+    def search_bill(self):
+        find_bill = "SELECT * FROM bill WHERE bill_no = ?"
+        cur.execute(find_bill, [cust_search_bill.get().rstrip()])
+        results = cur.fetchall()
+        if results:
+            self.clear_bill()
+            self.wel_bill()
+            self.name_message.insert(END, results[0][2])
+            self.name_message.configure(state="disabled")
+    
+            self.num_message.insert(END, results[0][3])
+            self.num_message.configure(state="disabled")
+    
+            self.bill_message.insert(END, results[0][0])
+            self.bill_message.configure(state="disabled")
+
+            self.bill_date_message.insert(END, results[0][1])
+            self.bill_date_message.configure(state="disabled")
+
+            self.Scrolledtext1.configure(state="normal")
+            self.Scrolledtext1.insert(END, results[0][4])
+            self.Scrolledtext1.configure(state="disabled")
+
+            self.entry1.configure(state="disabled", disabledbackground="#ffffff", disabledforeground="#000000")
+            self.entry2.configure(state="disabled", disabledbackground="#ffffff", disabledforeground="#000000")
+
+            self.state = 0
+
+        else:
+            messagebox.showerror("Error!!", "Bill not found.", parent=biller)
+            self.entry3.delete(0, END)
+            
+    def time(self):
+        string = strftime("%H:%M:%S %p")
+        self.clock.config(text=string)
+        self.clock.after(1000, self.time)
+
 
 
 def selected_groups(itm):
@@ -323,451 +992,7 @@ def selected_groups(itm):
     global sdbtn
     sdbtn=Button(Canvas3,text="Back",font=("times new roman",12,"bold"),bg="white",fg="black",command=movement_analysis_back)
     sdbtn.place(x=3,y=50,width=218,height=30,anchor="w")
-    
-def home():
-    name = Label(top, text="Statements Of Accounts", fg='black', bg='#00c8ff', font=(
-    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
-
-    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
-
-    name = Label(top, fg='#00c8ff', bg='#ffffff', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=0, y=73, width=1300, height=900)
-
-    menu = Label(top, fg='#00c8ff', bg='#a9ceeb', borderwidth=2, font=(
-        'Arial 9 underline'), anchor='w').place(x=863, y=300, width=232, height=150)
-
-    menuname = Label(top,text="Statements Of Accounts", fg='white', bg='#0851a8', borderwidth=2, font=(
-        'Arial 9 '), anchor='center').place(x=863, y=300, width=232, height=19)
-
-    b10 = Button(top,text = "Outstandings",activeforeground = "black",command=outstandings, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.390,width=232)
-    b11 = Button(top,text = "Statics",activeforeground = "black",command=statics, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.430,width=232)
-    b12 = Button(top,text = "Quit",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.470,width=232)
-
-
-
-def outstandings():
-    name = Label(top, text="Outstandings", fg='black', bg='#00c8ff', font=(
-    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
-
-    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
-
-    name = Label(top, fg='#00c8ff', bg='#ffffff', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=0, y=73, width=1300, height=900)
-    
-    b4 = Button(top, text="x", command=home, activeforeground="black", activebackground="#00c8ff",
-            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
-
-    menu = Label(top, fg='#00c8ff', bg='#a9ceeb', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=863, y=300, width=232, height=200)
-
-    menuname = Label(top,text="Outstandings", fg='white', bg='#0851a8', borderwidth=2, font=(
-    'Arial 9 '), anchor='center').place(x=863, y=300, width=232, height=19)
-
-    b13 = Button(top,text = "Receivables",activeforeground = "black", command=receivables, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.390, width=232)
-    b14 = Button(top,text = "Paybles",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.420, width=232)
-    b14 = Button(top,text = "Ledgers",activeforeground = "black", command=ledgers, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.460, width=232)
-    b14 = Button(top,text = "Group",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.490, width=232)
-    b15 = Button(top,text = "Quit",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.520, width=232)
-
-
-def receivables():
-
-    name = Label(top, text="Bills Receivables", fg='black', bg='#00c8ff', font=(
-    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
-
-    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
-
-    name = Label(top, fg='#00c8ff', bg='#ffffff', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=0, y=73, width=1300, height=900)
-    
-    b5 = Button(top, text="x", command=outstandings, activeforeground="black", activebackground="#00c8ff",
-            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
-
-    name = Label(top, bg='#ffffff',text="Group: All items", font=(
-    'Arial 12'), anchor='w').place(x=0, y=79)
-    name = Label(top, bg='#ffffff',text="For April-1", font=(
-    'Arial 12'), anchor='w').place(x=1200, y=79)        
-
-    t3 = ttk.Treeview(top)
-    t3['columns']=('Date','ref_id','Party_name','pending_amount','Due_on','overdue_days')
-    t3.column('#0', width=0, stretch=NO)
-    t3.column('Date', anchor=W, width=125,minwidth=125)
-    t3.column('ref_id', anchor=CENTER, width=125,minwidth=125)
-    t3.column('Party_name', anchor=W, width=665,minwidth=520)
-    t3.column('pending_amount', anchor=CENTER, width=125,minwidth=125)
-    t3.column('Due_on', anchor=CENTER, width=125,minwidth=125)
-    t3.column('overdue_days', anchor=CENTER, width=125,minwidth=125)
-   
-
-    t3.heading('#0', text='', anchor=CENTER)
-    t3.heading('Date', text='Date', anchor=W)
-    t3.heading('ref_id', text='ref id', anchor=CENTER)
-    t3.heading('Party_name', text='Party Name', anchor=W)
-    t3.heading('pending_amount', text='pending amount', anchor=CENTER)
-    t3.heading('Due_on', text='Due on', anchor=CENTER)
-    t3.heading('overdue_days', text='overduedays', anchor=CENTER)
-   
-    t3.insert(parent='', index=0, iid=0, text='', values=('1-apr-2021','3','Brothers enterprises','4904','1-apr-2021','0'))
-    t3.insert(parent='0', index=1, iid=1, text='', values=('','15 BTL','Himalaya body soap  200.00/BTL','','',''))
-    t3.insert(parent='0', index=2, iid=2, text='', values=('','15 BTL','Himalaya body soap  200.00/BTL','','',''))
-    t3.place(x=3, y=105, height=800)
-
-    name = Label(top, bg='#ffffff',text="Total", font=(
-    'Arial 9'), anchor='w').place(x=20, y=750)
-    name = Label(top, bg='#ffffff',text="4904", font=(
-    'Arial 9'), anchor='w').place(x=940, y=750)  
-
-def ledgers():
-    ledger = Label(top, text="Select Ledger", fg='black', bg='#00c8ff', font=(
-    'Arial 7 bold'), anchor='w').place(x=1, y=60, width=1219, height=13)
-    ledger = Label(top, text="", fg='#00c8ff', bg='white', font=(
-    'Arial 9 underline'), anchor='w').place(x=1, y=73, width=1298, height=604)
-    b4 = Button(top, text="x", command=outstandings, activeforeground="black", activebackground="#00c8ff",
-            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
-
-    Label1 = Label(top,text='Name of item',borderwidth="0", width=3, background="#faf8d7",
-                                     foreground="#00254a",
-                                     font="-family {Segoe UI} -size 10 -weight bold ",anchor="n",bd=2,)
-    Label1.place(relx=0.35, rely=0.09, relheight=0.10, relwidth=0.150)
-    Entry1 = Entry(top,width=8,borderwidth="3",bg="#f7d065")
-    Entry1.place(relx=0.36, rely=0.14, relheight=0.03, relwidth=0.132)
-
-
-    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
-
-    menu = Label(top, fg='#00c8ff', bg='#a9ceeb', borderwidth=2, font=(
-        'Arial 9 underline'), anchor='w').place(x=504, y=180, width=300, height=400)
-
-    menuname = Label(top,text="List Of Stock Items", fg='white', bg='#0851a8', borderwidth=2, font=(
-        'Arial 9 '), anchor='center').place(x=504, y=160, width=300, height=19)
-
-
-
-    b9 = Button(top,text = "Create",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.450, rely=0.220,relwidth=0.070,anchor="nw")
-    b10 = Button(top,text = "Pen",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10'),anchor="w").place(relx=0.350, rely=0.250,relwidth=.148)
-
- 
-
-def branch_edit():
-    name = Label(top, text="Group Altration", fg='black', bg='#00c8ff', font=(
-    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
-
-    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
-
-    global selected_ledgers_frame
-    selected_ledgers_frame=Frame(top,bg="#b6bcc0",relief=RAISED,bd=0)
-    selected_ledgers_frame.place(x=1, y=73,width=1300, height=900)
-    f16=Frame(selected_ledgers_frame,bg="white",relief=RAISED,)
-    f16.place(x=0,y=0,width=700,height=350)
-
-    b4 = Button(top, text="x", command=list_of_groups, activeforeground="black", activebackground="#00c8ff",
-            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
-
-    name = Label(f16, text = "Name",fg='black',bg='white').place(x = 10,y = 10,width=60,height=30)
-    alias = Label(f16, text = "(alias)",fg='black',bg='white').place(x = 10, y =50,width=60,height=30)  
-    under = Label(f16, text = "Under : ",fg='black',bg='white').place(x = 10, y =100,width=60,height=30)  
-    
-    e1 = Entry(f16,fg='black',bg='#ffeb7d').place(x = 80, y = 10,width=300,height=30)
-    e2 = Entry(f16,fg='black',bg='white').place(x = 80, y = 50,width=300,height=30)
-    under = Label(f16, text = "~primary",fg='black',bg='white').place(x = 80, y =100,width=60,height=30)  
-    separator = ttk.Separator(f16, orient='horizontal')
-    separator.place(relx=0, rely=0.4, relheight=0, relwidth=1)
-    ngroup = Label(f16, text = "Nature of groups",fg='black',bg='white').place(x = 10,y =150,height=30)
-    top.option_add('*TCombobox*Listbox*Background', fg)
-    top.option_add('*TCombobox*Listbox*Foreground', te)
-    top.option_add('*TCombobox*Listbox*selectBackground', ebg)
-    top.option_add('*TCombobox*Listbox*selectForeground', te)
-    course=['Assets','Liabilties']
-    cmb=ttk.Combobox(state="readonly",value=course,width=30,height=30)
-    cmb.place(x=350,y=230)
-    gbehave = Label(f16, text = "group behaves like a sub ledger",fg='black',bg='white').place(x = 10, y =190) 
-    top.option_add('*TCombobox*Listbox*Background', fg)
-    top.option_add('*TCombobox*Listbox*Foreground', te)
-    top.option_add('*TCombobox*Listbox*selectBackground', ebg)
-    top.option_add('*TCombobox*Listbox*selectForeground', te)
-    course=['Yes','No']
-    cmb=ttk.Combobox(state="readonly",value=course,width=15,height=30)
-    cmb.place(x=350,y=270) 
-    ndeb = Label(f16, text = "Nett Debit/Credit balances for Reporting",fg='black',bg='white').place(x = 10, y =215) 
-   
-    course=['Yes','No']
-    cmb=ttk.Combobox(state="readonly",value=course,width=15,height=30)
-    cmb.place(x=350,y=295)  
-    ucal = Label(f16, text = "User for calculation(for example:taxes,discounts)",fg='black',bg='white').place(x = 10, y =240) 
-    top.option_add('*TCombobox*Listbox*Background', fg)
-    top.option_add('*TCombobox*Listbox*Foreground', te)
-    top.option_add('*TCombobox*Listbox*selectBackground', ebg)
-    top.option_add('*TCombobox*Listbox*selectForeground', te)
-    course=['Yes','No']
-    cmb=ttk.Combobox(state="readonly",value=course,width=15,height=30)
-    cmb.place(x=350,y=320)  
-    ndeb = Label(f16, text = "(for sales invoice entries)",fg='black',bg='white').place(x = 10, y =260)  
-    ndeb = Label(f16, text = "Method to allocate when used in purchace invoice",fg='black',bg='white').place(x = 10, y =285)
-    top.option_add('*TCombobox*Listbox*Background', fg)
-    top.option_add('*TCombobox*Listbox*Foreground', te)
-    top.option_add('*TCombobox*Listbox*selectBackground', ebg)
-    top.option_add('*TCombobox*Listbox*selectForeground', te)
-    course=['Not Applicable','Appropriate By Qty','Appropriate By Value']
-    cmb=ttk.Combobox(state="readonly",value=course,width=30,height=30)
-    cmb.place(x=350,y=360)
-
-    style.map('TCombobox', fieldbackground=[('readonly', fg)])
-    style.map('TCombobox', selectbackground=[('readonly', fg)])
-    style.map('TCombobox', selectforeground=[('readonly', te)])
-    style.map('TCombobox', background=[('readonly', fg)])
-    style.map('TCombobox', foreground=[('readonly', te)])
-
-
-def list_of_ledgers():
-    name = Label(top, text="Chart Of Accounts", fg='black', bg='#00c8ff', font=(
-    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
-
-    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
-
-    name = Label(top, fg='#00c8ff', bg='#ffffff', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=0, y=73, width=1300, height=900)
-
-    b4 = Button(top, text="x", command=statics, activeforeground="black", activebackground="#00c8ff",
-            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
-
-    name = Label(top, bg='#ffffff',text="List Of Ledgers", font=(
-    'Arial 12'), anchor='w').place(x=0, y=79)
-    name = Label(top, bg='#ffffff',text="For April-1", font=(
-    'Arial 12'), anchor='w').place(x=1200, y=79)
-    separator = ttk.Separator(top, orient='horizontal')
-    separator.place(x=0, y=110, relheight=0, relwidth=0.845) 
-    name = Label(top, bg='#ffffff',text="Assets", font=(
-    'Arial 12 underline'), anchor='w').place(x=0, y=120)
-    b1s = Button(top,text = "Current Assets", activeforeground = "black",command=branch_edit, activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b1s.place(x=0,y=145,width=1300,height=18)
-    b2s = Button(top,text = "Bank Accounts", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b2s.place(x=20,y=165,width=1280,height=18)
-    b3s = Button(top,text = "Cash In Hand", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b3s.place(x=20,y=185,width=1280,height=18)
-    b4s = Button(top,text = "Cash", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 italic'),anchor="w")
-    b4s.place(x=20,y=205,width=1280,height=18)
-    b5s = Button(top,text = "Deposits(Assets)", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b5s.place(x=20,y=225,width=1280,height=18)
-    b6s = Button(top,text = "Loans & Advances(Assets)", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b6s.place(x=20,y=245,width=1280,height=18)
-    b7s = Button(top,text = "Stock In Hand", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b7s.place(x=20,y=265,width=1280,height=18)
-    b8s = Button(top,text = "Sundry Debtors", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b8s.place(x=20,y=285,width=1280,height=18)
-    b9s = Button(top,text = "Fixed Assets", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b9s.place(x=0,y=305,width=1300,height=18)
-    b10s = Button(top,text = "Investments", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b10s.place(x=0,y=325,width=1300,height=18)
-    b11s = Button(top,text = "Misc.Expences(ASSSET)", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b11s.place(x=0,y=345,width=1300,height=18)
-    name = Label(top, bg='#ffffff',text="Liabilities", font=(
-    'Arial 12 underline'), anchor='w').place(x=0, y=365)
-    b12s = Button(top,text = "Branch/Divisions", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b12s.place(x=0,y=390,width=1300,height=18)
-    b13s = Button(top,text = "Capital Account", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b13s.place(x=0,y=410,width=1300,height=18)
-    b14s = Button(top,text = "Reserves & Surplus", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b14s.place(x=20,y=430,width=1280,height=18)
-    b15s = Button(top,text = "Current Liabalities", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b15s.place(x=0,y=450,width=1300,height=18)
-    b16s = Button(top,text = "Duties & Taxes", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b16s.place(x=20,y=470,width=1280,height=18)
-    b17s = Button(top,text = "Provisions", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b17s.place(x=20,y=490,width=1280,height=18)
-    b18s = Button(top,text = "Sundry Creditors", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b18s.place(x=20,y=510,width=1280,height=18)
-    b19s = Button(top,text = "Loans(Liability)", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b19s.place(x=0,y=530,width=1300,height=18)
-    b20s = Button(top,text = "Bank OD A/c", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b20s.place(x=20,y=550,width=1280,height=18)
-    b21s = Button(top,text = "Secured Loans", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b21s.place(x=20,y=570,width=1280,height=18)
-    b22s = Button(top,text = "Un Secured Loans", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b22s.place(x=20,y=590,width=1280,height=18)
-    b23s = Button(top,text = "Suspence A/C", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b23s.place(x=0,y=610,width=1300,height=18)
-    b24s = Button(top,text = "Profit & lose A/c", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 italic'),anchor="w")
-    b24s.place(x=0,y=630,width=1300,height=18)
-    name = Label(top, bg='#ffffff',text="Expences", font=(
-    'Arial 12 underline'), anchor='w').place(x=0, y=650)
-    b25s = Button(top,text = "Direct Expence", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b25s.place(x=0,y=675,width=1300,height=18)
-    b26s = Button(top,text = "Indirect Expence", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b26s.place(x=0,y=695,width=1300,height=18)
-    b27s = Button(top,text = "Purchase Accounts", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b27s.place(x=0,y=715,width=1300,height=18)
-    name = Label(top, bg='#ffffff',text="Income", font=(
-    'Arial 12 underline'), anchor='w').place(x=0, y=735)
-    b28s = Button(top,text = "Direct Income", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b28s.place(x=0,y=760,width=1300,height=18)
-    b29s = Button(top,text = "Indirect Income", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b29s.place(x=0,y=780,width=1300,height=18)
-    b30s = Button(top,text = "Sales Accounts", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b30s.place(x=0,y=800,width=1300,height=18)
-    
-def list_of_Stock_groups():
-    name = Label(top, text="Chart Of Accounts", fg='black', bg='#00c8ff', font=(
-    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
-
-    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
-
-    name = Label(top, fg='#00c8ff', bg='#ffffff', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=0, y=73, width=1300, height=900)
-
-    b4 = Button(top, text="x", command=statics, activeforeground="black", activebackground="#00c8ff",
-            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
-
-    name = Label(top, bg='#ffffff',text="List Of Stock Groups", font=(
-    'Arial 12'), anchor='w').place(x=0, y=79)
-    name = Label(top, bg='#ffffff',text="For April-1", font=(
-    'Arial 12'), anchor='w').place(x=1200, y=79)
-    separator = ttk.Separator(top, orient='horizontal')
-    separator.place(x=0, y=110, relheight=0, relwidth=0.845)
-
-def list_of_Stock_items():
-    name = Label(top, text="Chart Of Accounts", fg='black', bg='#00c8ff', font=(
-    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
-
-    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
-
-    name = Label(top, fg='#00c8ff', bg='#ffffff', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=0, y=73, width=1300, height=900)
-
-    b4 = Button(top, text="x", command=statics, activeforeground="black", activebackground="#00c8ff",
-            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
-
-    name = Label(top, bg='#ffffff',text="List Of Stock items", font=(
-    'Arial 12'), anchor='w').place(x=0, y=79)
-    name = Label(top, bg='#ffffff',text="For April-1", font=(
-    'Arial 12'), anchor='w').place(x=1200, y=79)
-    separator = ttk.Separator(top, orient='horizontal')
-    separator.place(x=0, y=110, relheight=0, relwidth=0.845) 
-    
-
-def voucher_types():
-    name = Label(top, text="Chart Of Accounts", fg='black', bg='#00c8ff', font=(
-    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
-
-    name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
-
-    name = Label(top, fg='#00c8ff', bg='#ffffff', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=0, y=73, width=1300, height=900)
-
-    b4 = Button(top, text="x", command=statics, activeforeground="black", activebackground="#00c8ff",
-            fg='black', bg='#00c8ff', borderwidth=0, font=('Arial 10 bold'),).place(x=1280, y=60,height=12)
-
-    name = Label(top, bg='#ffffff',text="List Of Voucher Types", font=(
-    'Arial 12'), anchor='w').place(x=0, y=79)
-    name = Label(top, bg='#ffffff',text="For April-1", font=(
-    'Arial 12'), anchor='w').place(x=1200, y=79)
-    separator = ttk.Separator(top, orient='horizontal')
-    separator.place(x=0, y=110, relheight=0, relwidth=0.845) 
-    b1s = Button(top,text = "Attendance", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b1s.place(x=0,y=125,width=1300,height=18)
-    b2s = Button(top,text = "Contra", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b2s.place(x=0,y=145,width=1300,height=18)
-    b3s = Button(top,text = "Credit Note", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b3s.place(x=0,y=165,width=1300,height=18)
-    b4s = Button(top,text = "Debit Note", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b4s.place(x=0,y=185,width=1300,height=18)
-    b5s = Button(top,text = "Delivery Note", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b5s.place(x=0,y=205,width=1300,height=18)
-    b6s = Button(top,text = "Job Work In Order", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b6s.place(x=0,y=225,width=1300,height=18)
-    b7s = Button(top,text = "Job Work Out Order", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b7s.place(x=0,y=245,width=1300,height=18)
-    b8s = Button(top,text = "Journel", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b8s.place(x=0,y=265,width=1300,height=18)
-    b9s = Button(top,text = "Meterial In", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b9s.place(x=0,y=285,width=1300,height=18)
-    b10s = Button(top,text = "Meterial Out", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b10s.place(x=0,y=305,width=1300,height=18)
-    b11s = Button(top,text = "Memorandum", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b11s.place(x=0,y=325,width=1300,height=18)
-    b12s = Button(top,text = "Payment", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b12s.place(x=0,y=345,width=1300,height=18)
-    b13s = Button(top,text = "Payroll", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b13s.place(x=0,y=365,width=1300,height=18)
-    b14s = Button(top,text = "Physical Stock", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b14s.place(x=0,y=385,width=1300,height=18)
-    b15s = Button(top,text = "Purchase", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b15s.place(x=0,y=405,width=1300,height=18)
-    b16s = Button(top,text = "Purchase Order", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b16s.place(x=0,y=425,width=1300,height=18)
-    b17s = Button(top,text = "Reciept", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b17s.place(x=0,y=445,width=1300,height=18)
-    b18s = Button(top,text = "Reciept Note", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b18s.place(x=0,y=465,width=1300,height=18)
-    b19s = Button(top,text = "Rejections In", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b19s.place(x=0,y=485,width=1300,height=18)
-    b20s = Button(top,text = "Rejections Out", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b20s.place(x=0,y=505,width=1300,height=18)
-    b21s = Button(top,text = "reversing Journels", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b21s.place(x=0,y=525,width=1300,height=18)
-    b22s = Button(top,text = "Sales", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b22s.place(x=0,y=545,width=1300,height=18)
-    b23s = Button(top,text = "Sales Order", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b23s.place(x=0,y=565,width=1300,height=18)
-    b24s = Button(top,text = "Stock Journel", activeforeground = "black", activebackground = "#ffbe23",fg='black',bg='white',borderwidth=0,font=('Arial  10 bold'),anchor="w")
-    b24s.place(x=0,y=585,width=1300,height=18)
-    
-
-# NavBar Start
-name = Label(top, text="TallyPrime", fg='pink', bg='#3a646b', font=(
-    "Arial", 13), anchor='w').place(x=0, y=0, width=1600, height=60)
-name = Label(top, text="Gate WayOf Tally", fg='black', bg='#00c8ff', font=(
-    'Arial 7 bold'), anchor='w').place(x=0, y=60, width=1600, height=13)
-name = Label(top, text="MANAGE", fg='#00c8ff', bg='#3a646b', font=(
-    'Arial 9 underline'), anchor='w').place(x=110, y=9, width=206, height=10)
-
-b1 = Button(top, text="K:Company", activeforeground="black", activebackground="white",
-            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=120, y=33)
-b2 = Button(top, text="Y:Data", activeforeground="black", activebackground="white",
-            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=275, y=33)
-b3 = Button(top, text="Z:Exchange", activeforeground="black", activebackground="white",
-            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=395, y=33)
-b4 = Button(top, text="  G:Go To  ", activeforeground="black", activebackground="white",
-            fg='black', bg='white', borderwidth=0, underline=2, font=('Arial 10 bold'),).place(x=565, y=33)
-b5 = Button(top, text="O:Import", activeforeground="black", activebackground="white",
-            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=825, y=33)
-b6 = Button(top, text="E:Export", activeforeground="black", activebackground="white",
-            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=925, y=33)
-b7 = Button(top, text="M:E-mail", activeforeground="black", activebackground="white",
-            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=1025, y=33)
-b8 = Button(top, text="P:Print", activeforeground="black", activebackground="white",
-            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=1127, y=33)
-b9 = Button(top, text="F1:Help", activeforeground="black", activebackground="white",
-            fg='white', bg='#3a646b', borderwidth=0, underline=0, font=('Arial 10')).place(x=1227, y=33)
-
-# NavBar End
-
-
-
-name = Label(top, fg='#00c8ff', bg='#94ecf7', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=1300, y=60, width=315, height=900)
-
-menu = Label(top, fg='#00c8ff', bg='#a9ceeb', borderwidth=2, font=(
-    'Arial 9 underline'), anchor='w').place(x=863, y=300, width=232, height=150)
-
-menuname = Label(top,text="Statements Of Accounts", fg='white', bg='#0851a8', borderwidth=2, font=(
-    'Arial 9 '), anchor='center').place(x=863, y=300, width=232, height=19)
-
-
-
-
-b10 = Button(top,text = "Outstandings",activeforeground = "black",command=outstandings, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.390,width=232)
-b11 = Button(top,text = "Statics",activeforeground = "black", command=statics, activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.430,width=232)
-b12 = Button(top,text = "Quit",activeforeground = "black", activebackground = "#ffbe23",bg='#a9ceeb',borderwidth=0,font=('Arial 10')).place(relx=0.562, rely=0.470,width=232)
-
+  
 def selected_category():
     f1.destroy()
     f3.destroy()
