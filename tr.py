@@ -2403,6 +2403,152 @@ def selected_category():
     l7f6=Label(f20,text="100",font=("times new roman",12,"bold"),bg="white",fg="black",borderwidth=0)
     l7f6.place(x=0,y=0,anchor="nw")
 
+def select_stl():
+
+    global Canvas3
+    Canvas3 = tk.Canvas(background="#e6ffff", insertbackground="black", relief="ridge",selectbackground="blue", selectforeground="white")
+    Canvas3.place(relx=0.850, rely=0.07, relheight=0.8, relwidth=0.150)
+    
+
+
+
+
+
+    global label_1
+    label_1 = Label(Canvas1, text="Select stock group",borderwidth="0", width=40, background="#3385ff",foreground="#00254a",font="-family {Segoe UI} -size 10 -weight bold ")
+    label_1.place(relx=0, rely=0)
+    bk = Button(Canvas1, text="x", command=movement_analysis, activeforeground="black", activebackground="#3385ff",
+            fg='black', bg='#3385ff', borderwidth=0, font=('Arial 16 bold'),).place(x=1280, y=0,height=18)
+    
+    
+    movement_analysis_frame.destroy()
+    f1.destroy()
+    f55.destroy()
+    f66.destroy()
+    global select_stl_frame
+    select_stl_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    select_stl_frame.place(x=0,y=21,width=1308,height=660)
+    f5=Frame(select_stl_frame,bg="white",relief=RAISED,bd=1)
+    f5.pack()
+    f6=Frame(select_stl_frame,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
+    f6.pack()
+    f0.destroy()
+    l11=Label(f5,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
+    l11.pack()
+    E1 = Entry(f5,width=30,borderwidth="1",bg="#f7d065")
+    E1.pack(padx=10,pady=20)
+   
+
+    
+    
+
+    conn = mysql.connector.connect(host ="localhost",
+                                     user = "root",
+                                     password ="",
+                                     db ="db")
+    c= conn.cursor()
+    c.execute('SELECT stock_group_name  FROM app_stock_groups')
+    dt=c.fetchall()
+    
+   
+
+
+
+
+
+    options_list=["Period","Stock Category Analysis","Stock Item Analysis"]
+    # cmb=ttk.Combobox(f5 ,values=options_list,font=("times new roman",10,"bold"),background="#f7d065")
+    # cmb.pack(fill=X,pady=10,padx=10)
+
+    l5=Label(f6,text="List of stock group",font=hfont,bg="#0851a8",fg="white")
+    l5.pack(fill=X)
+    global lb
+    lb=Listbox(f6,height=15,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)  
+    lb.bind('<<ListboxSelect>>',stock_group_select)
+
+    lb.pack(padx=10,pady=10)
+    for items in dt:
+        lb.insert(END,items)
+    c.close()
+    def db_search(e):
+        search=E1.get()
+        lb.delete(0,END)
+        conn = mysql.connector.connect(host ="localhost",
+                                            user = "root",
+                                            password ="",
+                                            db ="db")
+        c= conn.cursor()
+        c.execute('SELECT stock_group_name  FROM app_stock_groups WHERE stock_group_name LIKE "%{}%"'.format(search))
+        dt=c.fetchall()
+        if dt:
+            for items in dt:
+                lb.insert(END,items)
+            c.close()
+        else:
+            messagebox.showinfo("No data found","No data found")
+    
+    E1.bind("<KeyRelease>",db_search)
+
+def  Stock_Cate_Analy():
+    
+    global label_1
+    label_1 = Label(Canvas1, text="Select stock category",borderwidth="0",width="40", background="#3385ff", foreground="#00254a",  font="-family {Segoe UI} -size 10 -weight bold ")                                                   
+    label_1.place(relx=0, rely=0)
+    bk = Button(Canvas1, text="x", command=movement_analysis, activeforeground="black", activebackground="#3385ff",
+            fg='black', bg='#3385ff', borderwidth=0, font=('Arial 16 bold'),).place(x=1280, y=0,height=18)
+    
+    movement_analysis_frame.destroy()
+    f0.destroy()
+    f1.destroy()
+    f55.destroy()
+    f66.destroy()
+    global stock_category_frame
+    stock_category_frame=Frame(Canvas1,bg="white",relief=RAISED,bd=0)
+    stock_category_frame.place(x=0,y=21,width=1308,height=660)
+    f5=Frame(stock_category_frame,bg="white",relief=RAISED,bd=1)
+    f5.pack(pady=15)
+    f6=Frame(stock_category_frame,bg="white",relief=RAISED,bd=1,background="#e6ffff",width=100)
+    f6.pack()
+    l11=Label(f5,text="Name of Group",font=("times new roman",10,"bold"),bg="white",fg="black",borderwidth=0)
+    l11.pack()
+    E1 = Entry(f5,width=30,borderwidth="1",bg="#f7d065")
+    E1.pack(padx=10,pady=20)
+   
+    l5=Label(f6,text="List of stock Category",font=hfont,bg="#0851a8",fg="white")
+    l5.pack(fill=X)
+    global lb
+    lb=Listbox(f6,height=6,background="#e6ffff",font="-family {Segoe UI} -size 12",justify="left",activestyle="none",bd=0,selectmode=BROWSE,width=25)
+    lb.bind('<<ListboxSelect>>',stock_group_select)
+    lb.pack(padx=10,pady=10)
+    conn = mysql.connector.connect(host ="localhost",
+                                     user = "root",
+                                     password ="",
+                                     db ="db")
+    c= conn.cursor()
+    c.execute('SELECT stock_group_name  FROM app_stock_groups')
+    dt=c.fetchall()
+
+    for items in dt:
+        lb.insert(END,items)
+    c.close()
+    def db_search(e):
+        search=E1.get()
+        lb.delete(0,END)
+        conn = mysql.connector.connect(host ="localhost",
+                                            user = "root",
+                                            password ="",
+                                            db ="db")
+        c= conn.cursor()
+        c.execute('SELECT stock_group_name  FROM app_stock_groups WHERE stock_group_name LIKE "%{}%"'.format(search))
+        dt=c.fetchall()
+        if dt:
+            for items in dt:
+                lb.insert(END,items)
+            c.close()
+        else:
+            messagebox.showinfo("No data found","No data found")
+    
+    E1.bind("<KeyRelease>",db_search)
 def selected_item():
     movement_values()
 
