@@ -2697,6 +2697,79 @@ class bill_window:
         else:
             return
                     
+    def clear_bill(self):
+        self.wel_bill()
+        self.entry1.configure(state="normal")
+        self.entry2.configure(state="normal")
+        self.entry1.delete(0, END)
+        self.entry2.delete(0, END)
+        self.entry3.delete(0, END)
+        self.name_message.configure(state="normal")
+        self.num_message.configure(state="normal")
+        self.bill_message.configure(state="normal")
+        self.bill_date_message.configure(state="normal")
+        self.Scrolledtext1.configure(state="normal")
+        self.name_message.delete(1.0, END)
+        self.num_message.delete(1.0, END)
+        self.bill_message.delete(1.0, END)
+        self.bill_date_message.delete(1.0, END)
+        self.Scrolledtext1.delete(1.0, END)
+        self.name_message.configure(state="disabled")
+        self.num_message.configure(state="disabled")
+        self.bill_message.configure(state="disabled")
+        self.bill_date_message.configure(state="disabled")
+        self.Scrolledtext1.configure(state="disabled")
+        self.cart.remove_items()
+        self.state = 1
+
+    def clear_selection(self):
+        self.entry4.delete(0, END)
+        self.combo1.configure(state="normal")
+        self.combo2.configure(state="normal")
+        self.combo3.configure(state="normal")
+        self.combo1.delete(0, END)
+        self.combo2.delete(0, END)
+        self.combo3.delete(0, END)
+        self.combo2.configure(state="disabled")
+        self.combo3.configure(state="disabled")
+        self.entry4.configure(state="disabled")
+        try:
+            self.qty_label.configure(foreground="#ffffff")
+        except AttributeError:
+            pass
+             
+    def search_bill(self):
+        find_bill = "SELECT * FROM bill WHERE bill_no = ?"
+        cur.execute(find_bill, [cust_search_bill.get().rstrip()])
+        results = cur.fetchall()
+        if results:
+            self.clear_bill()
+            self.wel_bill()
+            self.name_message.insert(END, results[0][2])
+            self.name_message.configure(state="disabled")
+    
+            self.num_message.insert(END, results[0][3])
+            self.num_message.configure(state="disabled")
+    
+            self.bill_message.insert(END, results[0][0])
+            self.bill_message.configure(state="disabled")
+
+            self.bill_date_message.insert(END, results[0][1])
+            self.bill_date_message.configure(state="disabled")
+
+            self.Scrolledtext1.configure(state="normal")
+            self.Scrolledtext1.insert(END, results[0][4])
+            self.Scrolledtext1.configure(state="disabled")
+
+            self.entry1.configure(state="disabled", disabledbackground="#ffffff", disabledforeground="#000000")
+            self.entry2.configure(state="disabled", disabledbackground="#ffffff", disabledforeground="#000000")
+
+            self.state = 0
+
+        else:
+            messagebox.showerror("Error!!", "Bill not found.", parent=biller)
+            self.entry3.delete(0, END)
+                    
     
                     
 
